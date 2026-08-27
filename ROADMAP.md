@@ -43,6 +43,7 @@ Módulos previstos:
 - `email_conversion`
 - `archive_reader`
 - `annex_sorting`
+- `path_normalization`
 - `reporting`
 
 Criterios:
@@ -77,6 +78,7 @@ Objetivo: sustituir la ventana monolítica por una suite visual con tarjetas.
 - Certificación al reverso.
 - Escrito + Anexos.
 - Correos + Adjuntos.
+- Normalizar nombres y rutas.
 
 Características de interfaz:
 
@@ -112,6 +114,27 @@ Debe poder manejar secuencias como:
 5. PDF adicional.
 
 El usuario podrá reordenar todos los bloques mediante drag & drop. Los archivos comprimidos se expandirán visualmente en su posición y sus elementos internos también podrán reordenarse.
+
+## Herramienta planificada — Normalizar nombres y rutas
+
+Objetivo: revisar carpetas completas antes de moverlas o sincronizarlas y evitar errores por nombres o rutas incompatibles.
+
+Alcance previsto:
+
+- análisis recursivo de archivos y subcarpetas;
+- detección de nombres/rutas excesivamente largas;
+- detección de símbolos incompatibles;
+- nombres reservados de Windows;
+- limpieza de caracteres invisibles, espacios repetidos y terminaciones problemáticas;
+- detección y resolución segura de colisiones;
+- conservación de extensiones;
+- perfiles para Windows y OneDrive/SharePoint;
+- vista previa antes de aplicar;
+- CSV de cambios;
+- opción de deshacer cuando sea técnicamente seguro;
+- integración opcional con Procesar expediente y Escrito + Anexos.
+
+La implementación deberá priorizar un análisis que no modifique nada hasta recibir confirmación explícita del usuario.
 
 ## Fase 4 — Beta instalable
 
