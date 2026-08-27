@@ -210,3 +210,92 @@ Cada operación compleja debe poder generar:
 - estadísticas relevantes.
 
 Formatos previstos: TXT, CSV y futura vista dentro de la aplicación.
+
+## 15. Normalizar nombres y rutas
+
+### Objetivo
+
+Preparar carpetas completas de expedientes antes de copiarlas, sincronizarlas o cargarlas a Windows, OneDrive, SharePoint u otros repositorios que puedan rechazar nombres o rutas problemáticas.
+
+La herramienta debe aceptar una carpeta raíz y recorrer de forma recursiva todos sus archivos y subcarpetas, sin importar la extensión de los archivos.
+
+### Modo de trabajo
+
+El flujo previsto será:
+
+1. Seleccionar carpeta principal.
+2. Analizar sin modificar nada.
+3. Mostrar problemas detectados y nombres propuestos.
+4. Permitir revisar/corregir propuestas.
+5. Aplicar cambios solo cuando el usuario confirme.
+6. Generar registro de cambios.
+
+### Problemas a detectar
+
+- nombres excesivamente largos;
+- rutas completas excesivamente largas;
+- caracteres incompatibles o problemáticos como `< > : " / \\ | ? *`;
+- saltos de línea o caracteres invisibles;
+- espacios repetidos;
+- puntos o espacios al final del nombre;
+- nombres reservados de Windows como `CON`, `PRN`, `AUX`, `NUL`, `COM1`, `LPT1`, etc.;
+- posibles colisiones de nombres después de normalizar;
+- nombres de carpetas que contribuyan a superar el límite de la ruta completa.
+
+### Reglas de seguridad
+
+- conservar siempre la extensión original del archivo;
+- no modificar el contenido del documento;
+- no sobrescribir archivos existentes;
+- resolver duplicados de forma segura, por ejemplo `Contrato.pdf`, `Contrato (2).pdf`;
+- preservar el significado del nombre tanto como sea posible;
+- evitar reemplazar nombres legibles por códigos incomprensibles salvo que sea imprescindible;
+- trabajar sobre archivos de cualquier tipo, incluidos PDF, Office, imágenes, ZIP, RAR, CAD, videos u otros, porque esta herramienta modifica nombres/rutas y no el contenido.
+
+### Perfiles previstos
+
+- **Normalización suave:** corregir únicamente caracteres y terminaciones problemáticas.
+- **Compatible con Windows:** aplicar reglas conservadoras para nombres y rutas de Windows.
+- **Compatible con OneDrive/SharePoint:** aplicar reglas y límites conservadores para sincronización/carga.
+- **Normalización estricta:** limpiar y acortar de forma más agresiva cuando el usuario lo necesite.
+
+Los límites exactos de cada perfil deben definirse y probarse antes de la versión estable, ya que pueden depender del sistema operativo, cliente de sincronización y servicio utilizado.
+
+### Vista previa
+
+Mostrar una tabla con al menos:
+
+- estado;
+- ruta/nombre actual;
+- problema detectado;
+- nombre/ruta propuesta;
+- longitud actual;
+- longitud resultante.
+
+Ejemplo conceptual:
+
+| Estado | Nombre actual | Problema | Nombre propuesto |
+|---|---|---|---|
+| Advertencia | `Anexo Nº 2 - doc:*final?.pdf` | Símbolos | `Anexo Nº 2 - doc final.pdf` |
+| Advertencia | ruta de 340 caracteres | Ruta larga | ruta abreviada |
+| Correcto | `Anexo 3.pdf` | Ninguno | Sin cambios |
+
+### Registro y deshacer
+
+Antes de aplicar cambios debe generarse un registro con el mapeo:
+
+`RUTA ORIGINAL → RUTA NUEVA`
+
+Formato mínimo previsto: CSV.
+
+Se planifica una opción **Deshacer última normalización**, siempre que la estructura no haya sido movida o modificada externamente después del cambio.
+
+### Integración con otras herramientas
+
+Además de existir como herramienta independiente, podrá ofrecerse opcionalmente antes de:
+
+- Procesar expediente;
+- Escrito + Anexos;
+- copiar/preparar una carpeta para OneDrive/SharePoint.
+
+El análisis previo nunca debe modificar automáticamente los nombres sin confirmación explícita del usuario.
