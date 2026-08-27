@@ -23,5 +23,6 @@ El formato seguirá de manera general Keep a Changelog y el proyecto utilizará 
 - Omisión segura de CAD y formatos desconocidos.
 - Escrito + Anexos.
 - Bandeja drag & drop para múltiples escritos/anexos.
+- Normalizar nombres y rutas con análisis recursivo, vista previa, perfiles Windows/OneDrive/SharePoint, detección de rutas largas, símbolos problemáticos, colisiones y registro para deshacer.
 - Aplicación Windows instalable sin requerir Python al usuario final.
 - Web futura con descargas, documentación y donaciones voluntarias.
