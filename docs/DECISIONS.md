@@ -51,3 +51,19 @@
 ## ADR-010 — Licencia pendiente
 
 **Decisión:** no elegir una licencia hasta decidir si el proyecto será open source, source-available o solo freeware.
+
+## ADR-011 — Normalización de nombres con análisis previo
+
+**Decisión:** la herramienta Normalizar nombres y rutas debe analizar primero la carpeta completa y no efectuar cambios hasta que el usuario confirme explícitamente.
+
+**Motivo:** renombrar archivos y carpetas puede afectar referencias, sincronizaciones y estructuras de expedientes; la vista previa reduce el riesgo de cambios involuntarios.
+
+Reglas asociadas:
+
+- conservar extensiones;
+- nunca sobrescribir archivos por una colisión de nombres;
+- registrar ruta original y ruta nueva;
+- preservar nombres legibles siempre que sea posible;
+- considerar la longitud de la ruta completa, no solo el nombre individual;
+- ofrecer perfiles compatibles con Windows y OneDrive/SharePoint sin asumir un límite universal fijo;
+- permitir deshacer únicamente cuando pueda hacerse de forma segura.
