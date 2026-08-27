@@ -32,7 +32,7 @@ Unir, dividir, extraer, reordenar, girar/eliminar páginas, normalizar a A4, com
 
 ### Expedientes
 
-Procesar expedientes desde ZIP/carpetas, foliación correlativa, certificación al reverso, Escrito + Anexos, bandeja drag & drop, MSG/EML con adjuntos y conversión de Office.
+Procesar expedientes desde ZIP/carpetas, foliación correlativa, certificación al reverso, Escrito + Anexos, bandeja drag & drop, MSG/EML con adjuntos, conversión de Office y **Normalizar nombres y rutas** para preparar carpetas complejas antes de moverlas a Windows, OneDrive o SharePoint.
 
 Consulta [docs/FEATURES.md](docs/FEATURES.md).
 
