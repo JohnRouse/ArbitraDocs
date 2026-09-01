@@ -1,99 +1,129 @@
-# Web pública de ArbitraPDF
+# Web pública de ArbitraDocs
 
 ## Objetivo
 
-La web será la cara pública del proyecto y el punto de descarga de la aplicación de escritorio. No será necesaria para procesar documentos.
+La web será la cara pública de **ArbitraDocs** y el punto principal de descarga, documentación y presentación de la suite.
 
-## Principio fundamental
+## Mensaje principal
 
-**Los expedientes se procesan localmente en la computadora del usuario.**
+**ArbitraDocs — Suite gratuita de herramientas documentales**
 
-La web no debe pedir que el usuario suba PDFs, ZIP, RAR, correos o anexos para utilizar las funciones principales de ArbitraPDF.
+La web debe dejar claro desde el inicio que:
 
-## Estructura inicial propuesta
+- las herramientas son gratuitas;
+- la aplicación se instala en Windows;
+- el usuario no necesita Python;
+- el procesamiento será local siempre que sea técnicamente viable;
+- no es necesario subir documentos a la web para utilizar la suite.
+
+## Estructura inicial
 
 ### Inicio
 
-- nombre y marca ArbitraPDF;
-- mensaje principal: herramientas para expedientes y documentos PDF;
-- explicación breve del procesamiento local;
-- botón de descarga para Windows;
+- marca ArbitraDocs;
+- mensaje principal;
+- botón Descargar para Windows;
+- herramientas más utilizadas;
+- explicación de privacidad/local-first;
 - capturas de la aplicación;
-- herramientas destacadas.
+- enlace a todas las herramientas.
 
 ### Herramientas
 
-Catálogo visual similar al concepto de una suite PDF, dividido en:
+El catálogo web se organizará por categorías.
 
 #### PDF
 
-- Unir.
-- Dividir / Extraer.
-- Reordenar.
-- Foliar.
-- Comprimir.
-- Escala de grises.
-- A4.
-- Imágenes ↔ PDF.
+- Unir PDF.
+- Comprimir PDF.
+- OCR en PDF.
+- Dividir PDF.
+- Girar PDF.
+- Aplanar PDF.
+- Proteger PDF.
+- Desbloquear PDF.
+- Firmar PDF.
+- Marca de agua en PDF.
+- Recortar PDF.
 
-#### Expedientes
+#### PDF a otros formatos
 
-- Procesar expediente.
-- Foliación correlativa.
-- Certificación al reverso.
-- Escrito + Anexos.
-- Correos + Adjuntos.
+- PDF a JPG.
+- PDF a PNG.
+- PDF a WEBP.
+- PDF a Word.
+- PDF a Excel.
+- PDF a PowerPoint.
 
-### Descargar
+#### Crear PDF
+
+- Word a PDF.
+- Excel a PDF.
+- PowerPoint a PDF.
+- JPG a PDF.
+- PNG a PDF.
+- WEBP a PDF.
+
+#### Herramientas especiales
+
+- Foliar PDF.
+- Certificar PDF.
+- Normalizar nombres.
+
+Cada página de herramienta deberá explicar:
+
+- qué hace;
+- formatos admitidos;
+- opciones;
+- limitaciones;
+- privacidad;
+- ejemplos de uso.
+
+## Descargar
+
+Mostrar:
 
 - versión actual;
 - número de versión;
-- requisitos de Windows;
-- tamaño aproximado;
+- compatibilidad con Windows;
+- tamaño del instalador;
 - notas de versión;
-- checksum cuando se implemente;
-- futura firma digital del instalador.
+- checksum;
+- firma digital cuando se implemente.
 
-### Privacidad y seguridad
+## Privacidad y seguridad
 
 Explicar en lenguaje simple:
 
 - procesamiento local;
-- no subida de documentos;
-- funcionamiento offline del motor documental;
+- no subida obligatoria de archivos;
 - temporales locales;
-- dependencias externas utilizadas.
+- cómo se gestionan contraseñas;
+- qué componentes externos se utilizan;
+- qué funciones pueden requerir Microsoft Office u otros componentes locales.
 
-### Documentación / Ayuda
+## Documentación
 
-- manual de cada herramienta;
+- guía de instalación;
+- manual de herramientas;
 - preguntas frecuentes;
-- problemas conocidos;
-- tutoriales cortos;
-- solución de errores.
+- tutoriales;
+- solución de problemas;
+- formatos soportados;
+- limitaciones de conversiones.
 
-### Changelog
+## Reportar un problema
 
-Historial de versiones y cambios relevantes.
+Se podrá enlazar GitHub Issues o un formulario dedicado.
 
-### Reportar un problema
+Nunca se debe pedir a un usuario que publique documentos confidenciales para reportar un error.
 
-Enlace al sistema de issues o formulario controlado. Debe advertir que no se adjunten expedientes reales o información confidencial.
+## Apoyar el proyecto
 
-### Apoyar el proyecto
+ArbitraDocs será gratuito. La web podrá incluir aportes voluntarios mediante proveedores externos.
 
-ArbitraPDF podrá ofrecer aportes o donaciones voluntarias mediante proveedores externos como PayPal, Ko-fi, Buy Me a Coffee, GitHub Sponsors u otro que se defina.
-
-El apoyo económico no debe ser requisito para usar las funciones principales de la primera etapa.
-
-## Modelo inicial de distribución
-
-- aplicación gratuita;
-- descarga directa del instalador;
-- sin cuenta obligatoria;
-- donaciones voluntarias;
-- sin procesamiento documental en servidor.
+El apoyo económico no será requisito para utilizar las herramientas principales previstas.
 
 ## Actualizaciones
 
-La web publicará cada nueva versión. En una fase posterior, la aplicación podrá consultar si existe una versión nueva, sin enviar información documental del usuario.
+La web publicará nuevas versiones y su changelog. Una futura función de actualización dentro de la aplicación podrá consultar si existe una versión nueva sin enviar contenido documental del usuario.
