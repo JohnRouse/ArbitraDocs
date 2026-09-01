@@ -1,61 +1,92 @@
-# ArbitraPDF
+# ArbitraDocs
 
-**Herramientas para expedientes y documentos PDF**
+**Suite gratuita de herramientas documentales**
 
-ArbitraPDF es un proyecto de aplicación de escritorio para Windows orientado a resolver tareas repetitivas y complejas relacionadas con la preparación, organización, conversión, foliación e impresión de expedientes judiciales, arbitrales, administrativos y otros conjuntos documentales.
+ArbitraDocs es una aplicación de escritorio orientada a trabajar con PDF, documentos de Office e imágenes mediante herramientas simples, especializadas y de uso gratuito.
 
-El enfoque del proyecto es **local-first**: los documentos se procesan en la computadora del usuario y no necesitan cargarse a un servidor externo.
+El proyecto adopta un enfoque **local-first**: siempre que sea técnicamente posible, los documentos se procesan en la computadora del usuario y no necesitan cargarse a servidores externos.
 
-> Estado actual: prototipo funcional / etapa de diseño de la primera versión pública.
+> Estado actual: desarrollo inicial / construcción del núcleo modular.
 
 ## Objetivo
 
-Reducir el trabajo manual asociado a expedientes documentales de gran volumen, especialmente cuando contienen cientos o miles de páginas, múltiples carpetas, anexos, correos electrónicos y archivos en diferentes formatos.
-
-ArbitraPDF busca combinar herramientas PDF de uso general con funciones especializadas para expedientes.
+Crear una suite documental gratuita que reúna en una sola aplicación las operaciones más habituales sobre PDF y documentos, junto con herramientas especiales nacidas de necesidades documentales reales.
 
 ## Principios
 
-- Procesamiento local.
+- Herramientas gratuitas.
+- Procesamiento local por defecto.
 - Privacidad por diseño.
-- Orientado a grandes volúmenes.
-- Automatización con control humano.
-- Tolerancia a errores.
-- Reportes claros.
-- Instalación sencilla: el usuario final no necesita Python.
+- Interfaz sencilla para usuarios no técnicos.
+- Drag & drop cuando aporte utilidad.
+- El usuario final no necesita instalar Python.
+- Los archivos originales no se modifican salvo que la herramienta lo indique y el usuario lo confirme.
+- Errores recuperables y mensajes comprensibles.
 
-## Áreas de herramientas
+## Catálogo previsto
 
-### PDF generales
+### Herramientas PDF
 
-Unir, dividir, extraer, reordenar, girar/eliminar páginas, normalizar a A4, comprimir, escala de grises, imágenes ↔ PDF y foliación.
+- Unir PDF.
+- Comprimir PDF.
+- OCR en PDF.
+- Dividir PDF.
+- Girar PDF.
+- Aplanar PDF.
+- Proteger PDF.
+- Desbloquear PDF.
+- Firmar PDF.
+- Marca de agua en PDF.
+- Recortar PDF.
 
-### Expedientes
+### Conversión desde PDF
 
-Procesar expedientes desde ZIP/carpetas, foliación correlativa, certificación al reverso, Escrito + Anexos, bandeja drag & drop, MSG/EML con adjuntos, conversión de Office y **Normalizar nombres y rutas** para preparar carpetas complejas antes de moverlas a Windows, OneDrive o SharePoint.
+- PDF a JPG.
+- PDF a PNG.
+- PDF a WEBP.
+- PDF a Word.
+- PDF a Excel.
+- PDF a PowerPoint.
 
-Consulta [docs/FEATURES.md](docs/FEATURES.md).
+### Conversión hacia PDF
+
+- Word a PDF.
+- Excel a PDF.
+- PowerPoint a PDF.
+- JPG a PDF.
+- PNG a PDF.
+- WEBP a PDF.
+
+### Herramientas especiales ArbitraDocs
+
+- **Foliar PDF:** numeración ascendente/descendente, número, letras o ambos, incluida foliación correlativa.
+- **Certificar PDF:** intercalar una página de certificación antes o después de cada página del documento sin alterar su foliación original.
+- **Normalizar nombres:** analizar y corregir nombres/rutas problemáticos en PDFs, otros archivos y carpetas, con vista previa y control del usuario.
+
+Consulta [docs/FEATURES.md](docs/FEATURES.md) y [docs/TOOL_CATALOG.md](docs/TOOL_CATALOG.md).
 
 ## Aplicación de escritorio
 
-La versión pública se distribuirá como instalador de Windows (`Setup.exe`) y no requerirá que el usuario instale Python.
+La versión pública se distribuirá como instalador de Windows y no requerirá que el usuario tenga Python instalado.
 
-Para Word, Excel y PowerPoint se priorizará Microsoft Office local; LibreOffice podrá utilizarse como alternativa.
+Algunas conversiones podrán utilizar componentes locales como Microsoft Office, LibreOffice, Tesseract u otras bibliotecas libres, según la herramienta y la fidelidad requerida.
 
 ## Web
 
-La futura web servirá para presentar el proyecto, descargarlo, documentarlo, publicar versiones, explicar privacidad/seguridad y permitir aportes voluntarios. Los documentos no se procesarán en la web.
+La futura web de ArbitraDocs servirá para presentar las herramientas, descargar la aplicación, publicar documentación y versiones, explicar privacidad/seguridad y permitir aportes voluntarios.
+
+El objetivo no es obligar al usuario a cargar sus documentos a una web para utilizar la suite.
 
 ## Privacidad y seguridad
 
 Consulta [PRIVACY.md](PRIVACY.md) y [SECURITY.md](SECURITY.md).
 
-## Estado
+## Desarrollo
 
-Varias funciones ya han sido validadas mediante prototipos internos en Python: unión masiva, orden cronológico de carpetas, A4, foliación, foliación correlativa, compresión, escala de grises, conversiones y zipper.
+El primer núcleo ya trabaja sobre unión, normalización A4 y foliación. Este código se reutilizará como base de la nueva suite modular.
 
 Consulta [ROADMAP.md](ROADMAP.md).
 
 ## Licencia
 
-Pendiente de definición. No debe asumirse que el proyecto es open source hasta que se adopte expresamente una licencia.
+La licencia del código aún está pendiente de definición. Que ArbitraDocs sea gratuito para el usuario no implica necesariamente que todo el código sea open source; esta decisión se documentará antes del lanzamiento estable.
