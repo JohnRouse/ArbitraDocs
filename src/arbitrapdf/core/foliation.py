@@ -148,27 +148,27 @@ def _builtin_font_name(family: str, bold: bool, italic: bool) -> str:
     family_lower = family.casefold()
     if "times" in family_lower:
         if bold and italic:
-            return "Times-BoldItalic"
+            return "tibi"
         if bold:
-            return "Times-Bold"
+            return "tibo"
         if italic:
-            return "Times-Italic"
-        return "Times-Roman"
+            return "tiit"
+        return "tiro"
     if "courier" in family_lower:
         if bold and italic:
-            return "Courier-BoldOblique"
+            return "cobi"
         if bold:
-            return "Courier-Bold"
+            return "cobo"
         if italic:
-            return "Courier-Oblique"
-        return "Courier"
+            return "coit"
+        return "cour"
     if bold and italic:
-        return "Helvetica-BoldOblique"
+        return "hebi"
     if bold:
-        return "Helvetica-Bold"
+        return "hebo"
     if italic:
-        return "Helvetica-Oblique"
-    return "Helvetica"
+        return "heit"
+    return "helv"
 
 
 def _font_resources(options: FolioOptions) -> tuple[str, str | None, fitz.Font]:
