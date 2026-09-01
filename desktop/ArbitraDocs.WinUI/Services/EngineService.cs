@@ -13,9 +13,14 @@ public sealed record DocumentProcessOptions(
     string Direction,
     string Mode,
     string Position,
+    string FontFamily,
+    bool Bold,
+    bool Italic,
     double FontSize,
     double FolioMarginXmm,
-    double FolioMarginYmm);
+    double FolioMarginYmm,
+    bool Certify,
+    string? CertificatePdf);
 
 public sealed class EngineService
 {
@@ -28,6 +33,11 @@ public sealed class EngineService
         if (inputPdfs.Count == 0)
         {
             throw new ArgumentException("No hay PDFs para procesar.", nameof(inputPdfs));
+        }
+
+        if (options.Certify && (string.IsNullOrWhiteSpace(options.CertificatePdf) || !File.Exists(options.CertificatePdf)))
+        {
+            throw new ArgumentException("Selecciona un PDF de certificación válido.", nameof(options));
         }
 
         var enginePath = FindEngine();
@@ -70,11 +80,15 @@ public sealed class EngineService
 
             if (options.Foliate)
             {
+                var folioOutput = options.Certify
+                    ? Path.Combine(tempRoot.FullName, "03_folio.pdf")
+                    : outputPdf;
+
                 var args = new List<string>
                 {
                     "foliate",
                     current,
-                    outputPdf,
+                    folioOutput,
                     "--start",
                     options.StartNumber.ToString(CultureInfo.InvariantCulture),
                     "--direction",
@@ -83,6 +97,8 @@ public sealed class EngineService
                     options.Mode,
                     "--position",
                     options.Position,
+                    "--font-family",
+                    options.FontFamily,
                     "--font-size",
                     Invariant(options.FontSize),
                     "--margin-x-mm",
@@ -90,9 +106,29 @@ public sealed class EngineService
                     "--margin-y-mm",
                     Invariant(options.FolioMarginYmm),
                 };
+
+                if (options.Bold)
+                {
+                    args.Add("--bold");
+                }
+
+                if (options.Italic)
+                {
+                    args.Add("--italic");
+                }
+
                 await RunEngineAsync(enginePath, args, cancellationToken);
+                current = folioOutput;
             }
-            else
+
+            if (options.Certify)
+            {
+                await RunEngineAsync(
+                    enginePath,
+                    new[] { "certify", current, options.CertificatePdf!, outputPdf },
+                    cancellationToken);
+            }
+            else if (!options.Foliate)
             {
                 File.Copy(current, outputPdf, overwrite: true);
             }
