@@ -2,72 +2,76 @@
 
 ## Nombre
 
-**ArbitraPDF**
+**ArbitraDocs**
 
 ## Descripción corta
 
-Suite de herramientas locales para preparar, organizar y procesar expedientes y documentos PDF.
+Suite gratuita de herramientas documentales para PDF, Office e imágenes, con procesamiento local y funciones especiales para flujos documentales complejos.
 
 ## Propuesta de valor
 
-ArbitraPDF no busca ser únicamente otro editor PDF. Su principal diferenciador son los flujos pensados para personas que trabajan con expedientes documentales reales:
+ArbitraDocs busca reunir en una sola aplicación herramientas que normalmente están dispersas entre múltiples páginas web y programas diferentes.
 
-- grandes volúmenes;
-- carpetas cronológicas;
-- escritos + anexos;
-- ZIP/RAR;
-- foliación;
-- certificaciones;
-- correos y adjuntos;
-- formatos heterogéneos;
-- reportes de omisiones.
+La propuesta combina:
 
-## Usuarios potenciales
+- herramientas PDF de uso cotidiano;
+- conversión entre PDF, imágenes y Office;
+- OCR;
+- protección, firma y edición documental;
+- herramientas especiales desarrolladas a partir de necesidades reales;
+- procesamiento local para reducir la exposición de documentos sensibles.
 
-- centros de arbitraje;
+## Público objetivo
+
+- usuarios generales;
+- profesionales y empresas;
 - estudios jurídicos;
-- áreas legales;
-- secretarías arbitrales;
-- asistentes legales;
-- entidades públicas;
-- áreas administrativas;
+- centros de arbitraje;
+- áreas legales y administrativas;
+- entidades públicas y privadas;
 - notarías;
-- profesionales que gestionan expedientes;
-- usuarios generales que necesitan herramientas PDF.
+- estudiantes y docentes;
+- cualquier persona que trabaje con documentos digitales.
 
 ## Posicionamiento
 
-ArbitraPDF debe combinar:
+ArbitraDocs debe sentirse como una **suite documental gratuita**, no como una aplicación exclusiva para arbitraje ni como una herramienta limitada a expedientes.
 
-- simplicidad de una suite PDF;
-- privacidad de una aplicación local;
-- funciones de gestión documental especializadas.
+La marca conserva el origen del proyecto, pero el producto se amplía a cualquier usuario que necesite trabajar con documentos.
 
 ## Mensaje sugerido
 
-**ArbitraPDF — Herramientas para expedientes y documentos PDF**
+**ArbitraDocs — Suite gratuita de herramientas documentales**
 
 Alternativa:
 
-**ArbitraPDF — Soluciones locales para expedientes y documentos PDF**
+**ArbitraDocs — Tus herramientas para PDF y documentos, en un solo lugar**
 
 ## Modelo inicial
 
-- aplicación gratuita;
-- donaciones/aportes voluntarios;
-- sin necesidad de cuenta;
-- sin subir documentos a servidores.
+- herramientas gratuitas;
+- sin cuenta obligatoria;
+- procesamiento local por defecto;
+- instalador para Windows;
+- aportes o donaciones voluntarias;
+- sin paywall para las herramientas principales previstas.
 
-Más adelante se evaluará sostenibilidad sin comprometer privacidad ni usabilidad.
+## Diferenciadores
+
+Además de las herramientas habituales, ArbitraDocs incluirá funciones propias:
+
+- Foliar PDF.
+- Certificar PDF.
+- Normalizar nombres y rutas.
 
 ## Web
 
-La web debe transmitir inmediatamente:
+La web debe comunicar inmediatamente:
 
-1. qué problema resuelve;
-2. que funciona localmente;
-3. que no sube documentos;
-4. que se instala en Windows;
-5. qué herramientas incluye;
-6. dónde descargar;
-7. cómo colaborar con el proyecto.
+1. que ArbitraDocs es gratuito;
+2. qué herramientas contiene;
+3. que la aplicación procesa localmente cuando sea posible;
+4. que el usuario puede descargarla para Windows;
+5. que no necesita Python;
+6. cómo funciona cada herramienta;
+7. cómo apoyar voluntariamente el proyecto.
