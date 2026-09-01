@@ -8,7 +8,7 @@ public sealed partial class HomePage : Page
 {
     public ObservableCollection<ToolCardItem> Tools { get; } = new()
     {
-        new() { Key = "mergefolio", Name = "Unir y foliar PDF", Description = "Une varios PDFs, normaliza a A4 y agrega foliación configurable.", Available = true },
+        new() { Key = "mergefolio", Name = "Preparar PDFs", Description = "Une o mantiene separados tus PDFs, normaliza a A4, folia y puede certificar al reverso.", Available = true },
         new() { Key = "compress", Name = "Comprimir PDF", Description = "Reducir el peso de un documento PDF.", Available = false },
         new() { Key = "ocr", Name = "OCR en PDF", Description = "Reconocer texto dentro de PDFs escaneados.", Available = false },
         new() { Key = "split", Name = "Dividir PDF", Description = "Separar páginas o rangos en nuevos documentos.", Available = false },
@@ -18,7 +18,7 @@ public sealed partial class HomePage : Page
         new() { Key = "images-pdf", Name = "Imágenes a PDF", Description = "Crear PDF desde JPG, PNG o WEBP.", Available = false },
         new() { Key = "protect", Name = "Proteger PDF", Description = "Agregar contraseña y restricciones al PDF.", Available = false },
         new() { Key = "watermark", Name = "Marca de agua", Description = "Agregar texto o imagen como marca de agua.", Available = false },
-        new() { Key = "certify", Name = "Certificar PDF", Description = "Intercalar certificación al reverso de cada página.", Available = false },
+        new() { Key = "certify", Name = "Certificar PDF", Description = "Intercalar una hoja de certificación al reverso de cada página.", Available = true },
         new() { Key = "normalize-names", Name = "Normalizar nombres", Description = "Corregir nombres y rutas problemáticas para Windows y OneDrive.", Available = false },
     };
 
@@ -34,7 +34,7 @@ public sealed partial class HomePage : Page
             return;
         }
 
-        if (tool.Key == "mergefolio")
+        if (tool.Key is "mergefolio" or "certify")
         {
             App.MainWindow.NavigateToMergeFolio();
         }
