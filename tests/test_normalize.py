@@ -34,7 +34,7 @@ def test_a4_detection_with_small_tolerance():
     assert is_a4_portrait(almost_a4, tolerance_mm=3)
 
 
-def test_existing_a4_is_not_scaled(tmp_path: Path):
+def test_existing_a4_is_not_scaled_when_preserved(tmp_path: Path):
     source = tmp_path / "source.pdf"
     output = tmp_path / "output.pdf"
     _make_pdf(source, A4_RECT.width, A4_RECT.height)
@@ -51,11 +51,34 @@ def test_existing_a4_is_not_scaled(tmp_path: Path):
 
     out = fitz.open(output)
     after = out[0].search_for("MARCADOR")[0]
-
-    # La posición del contenido debe mantenerse. Si se aplicara el antiguo
-    # margen de 8 mm a una página que ya era A4, estas coordenadas cambiarían.
     assert abs(after.x0 - before.x0) < 0.5
     assert abs(after.y0 - before.y0) < 0.5
+    assert abs(out[0].rect.width - A4_RECT.width) < 0.1
+    assert abs(out[0].rect.height - A4_RECT.height) < 0.1
+    out.close()
+
+
+def test_existing_a4_can_receive_user_margin(tmp_path: Path):
+    """El usuario puede pedir margen incluso si el original ya era A4."""
+    source = tmp_path / "source.pdf"
+    output = tmp_path / "output.pdf"
+    _make_pdf(source, A4_RECT.width, A4_RECT.height, text_x=80, text_y=100)
+
+    src = fitz.open(source)
+    before = src[0].search_for("MARCADOR")[0]
+    src.close()
+
+    normalize_pdf_to_a4(
+        source,
+        output,
+        NormalizationOptions(margin_mm=8, preserve_a4=False),
+    )
+
+    out = fitz.open(output)
+    after = out[0].search_for("MARCADOR")[0]
+    # Al solicitar margen, el contenido se escala hacia el centro y por tanto
+    # sus coordenadas cambian respecto del A4 original.
+    assert abs(after.x0 - before.x0) > 0.5 or abs(after.y0 - before.y0) > 0.5
     assert abs(out[0].rect.width - A4_RECT.width) < 0.1
     assert abs(out[0].rect.height - A4_RECT.height) < 0.1
     out.close()
