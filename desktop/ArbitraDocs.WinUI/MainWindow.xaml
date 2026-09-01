@@ -19,7 +19,7 @@
 
             <NavigationViewItemHeader Content="Herramientas disponibles" />
 
-            <NavigationViewItem Content="Unir y foliar PDF" Tag="mergefolio">
+            <NavigationViewItem Content="Preparar PDFs" Tag="mergefolio">
                 <NavigationViewItem.Icon>
                     <FontIcon Glyph="&#xE8C8;" />
                 </NavigationViewItem.Icon>
