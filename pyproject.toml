@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "arbitrapdf"
-version = "0.1.0.dev0"
-description = "Herramientas locales para expedientes y documentos PDF"
+name = "arbitradocs"
+version = "0.1.0.dev1"
+description = "Suite gratuita de herramientas documentales"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -13,10 +13,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0"]
+dev = ["pytest>=8.0", "pyinstaller>=6.10"]
 
 [project.scripts]
-arbitrapdf = "arbitrapdf.cli:main"
+arbitradocs = "arbitrapdf.cli:main"
+
+[project.gui-scripts]
+arbitradocs-gui = "arbitrapdf.gui:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
