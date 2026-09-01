@@ -2,11 +2,11 @@
 
 ## Modelo de seguridad
 
-ArbitraPDF procesa documentos localmente. El objetivo es minimizar superficies de riesgo y evitar que documentos sensibles deban transmitirse por Internet.
+ArbitraDocs procesa documentos localmente siempre que sea técnicamente viable. El objetivo es minimizar superficies de riesgo y evitar que documentos sensibles deban transmitirse por Internet.
 
 ## Principios
 
-- No subir archivos a servidores externos.
+- No subir archivos a servidores externos por defecto.
 - No enviar copias silenciosas de documentos.
 - No incluir telemetría documental.
 - No registrar contenido de documentos en servicios remotos.
@@ -17,49 +17,65 @@ ArbitraPDF procesa documentos localmente. El objetivo es minimizar superficies d
 
 ## Dependencias
 
-La aplicación podrá utilizar bibliotecas de terceros, entre ellas:
+La suite podrá utilizar bibliotecas y componentes de terceros, por ejemplo:
 
-- PyMuPDF;
-- Pillow;
-- extract-msg;
-- pywin32;
-- componentes locales para RAR.
+- PyMuPDF u otro motor PDF local;
+- Pillow para imágenes;
+- Tesseract/OCRmyPDF para OCR;
+- pywin32 para integración local con Microsoft Office;
+- LibreOffice como alternativa de conversión;
+- otras bibliotecas específicas para conversión, firma o cifrado.
 
-Antes de una publicación estable deben revisarse sus licencias y políticas de actualización.
+Antes de una publicación estable deben revisarse licencias, mantenimiento y seguridad de cada dependencia.
 
 ## Microsoft Office / LibreOffice
 
-Cuando se utilicen, serán aplicaciones locales instaladas en la PC. ArbitraPDF no debe enviar el archivo a un servicio de Office en la nube para realizar conversiones.
+Cuando se utilicen, serán aplicaciones locales instaladas en la PC. ArbitraDocs no debe enviar documentos a servicios de Office en la nube para convertirlos sin una función explícita y futura que lo indique claramente.
+
+## Protección y desbloqueo de PDF
+
+- Proteger PDF debe utilizar cifrado soportado y bibliotecas mantenidas.
+- Las contraseñas no deben guardarse en logs ni configuración persistente.
+- Desbloquear PDF solo eliminará protección cuando el usuario proporcione una contraseña válida o el archivo sea legítimamente accesible.
+- No se implementará cracking o fuerza bruta de contraseñas.
+
+## OCR
+
+El OCR debe ejecutarse localmente en la configuración estándar. Los archivos temporales generados durante OCR deben tratarse como contenido sensible.
 
 ## Red
 
-El motor documental debe funcionar sin conexión. Una futura función de actualización podrá realizar solicitudes de red exclusivamente para:
+El núcleo documental debe funcionar sin conexión cuando la herramienta no requiera componentes externos.
+
+Una futura función de actualización podrá realizar solicitudes de red para:
 
 - comprobar la versión disponible;
 - descargar una actualización si el usuario lo solicita.
 
-Nunca deberá adjuntar documentos ni información extraída de ellos.
+Nunca deberá adjuntar documentos, contraseñas ni contenido extraído de ellos.
 
 ## Archivos potencialmente maliciosos
 
-Los documentos de terceros pueden contener contenido hostil. Consideraciones futuras:
+Los documentos de terceros pueden contener contenido hostil. Consideraciones:
 
 - abrir Office en modo no interactivo;
 - deshabilitar macros durante conversión cuando sea posible;
 - evitar ejecución de contenido embebido;
-- validar rutas al extraer ZIP/RAR para prevenir path traversal;
-- limitar recursividad de archivos comprimidos y correos;
-- imponer límites razonables de recursos.
+- validar archivos y rutas;
+- imponer límites razonables de recursos;
+- tratar PDFs y documentos corruptos como errores recuperables.
 
 ## Auditoría
 
 El diseño debe facilitar que un área de TI pueda revisar:
 
-- código fuente;
+- código fuente disponible;
 - dependencias;
 - accesos a red;
 - rutas temporales;
-- comportamiento de conversión.
+- comportamiento de conversión;
+- manejo de contraseñas;
+- mecanismos de actualización.
 
 ## Reporte de vulnerabilidades
 
