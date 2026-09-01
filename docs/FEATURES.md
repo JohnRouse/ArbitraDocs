@@ -1,301 +1,320 @@
-# Especificación funcional
+# Especificación funcional de ArbitraDocs
 
-## 1. Unir PDF / documentos
+Este documento define el comportamiento previsto de las herramientas principales de la suite.
 
-Permitir seleccionar múltiples elementos y convertirlos en un solo PDF respetando el orden definido por el usuario.
+## 1. Unir PDF
 
-Entradas previstas: PDF, Word, Excel, PowerPoint, imágenes, MSG, EML, ZIP/RAR en herramientas especializadas y carpetas.
+Permitir seleccionar múltiples PDFs, reordenarlos mediante drag & drop y generar un único archivo respetando exactamente el orden visual.
 
-## 2. Procesar expediente
+Requisitos:
 
-Herramienta especializada para expedientes estructurados por carpetas.
+- no alterar innecesariamente el tamaño de páginas existentes;
+- preservar páginas A4 al 100 % cuando no se solicite normalización;
+- mostrar cantidad total de archivos y páginas;
+- permitir quitar/reordenar elementos antes de procesar;
+- soportar archivos de gran volumen sin cargar todo el expediente en memoria cuando sea posible.
 
-### Orden
+## 2. Comprimir PDF
 
-Cuando las carpetas representan fechas, por ejemplo `20200129`, `20200203`, `20200310`, se ordenan de menor a mayor.
+Reducir el tamaño del archivo priorizando legibilidad.
 
-Dentro de cada carpeta:
+Opciones previstas:
 
-- conservar la secuencia original cuando sea relevante;
-- usar orden natural cuando corresponda;
-- no perder archivos repetidos con el mismo nombre.
+- compresión suave;
+- compresión equilibrada;
+- compresión alta;
+- calidad personalizada.
 
-### Salida
+Mostrar:
 
-- único PDF;
-- reporte de procesados;
-- reporte de omitidos;
-- número de páginas;
-- estadísticas básicas.
+- tamaño original;
+- tamaño final;
+- porcentaje real de reducción.
 
-## 3. Normalización A4
+Evitar rasterizar contenido vectorial/texto cuando exista una alternativa más eficiente.
 
-Objetivo: comportamiento equivalente a imprimir con papel A4 vertical y “ajustar a página”.
+## 3. OCR en PDF
 
-Reglas:
+Reconocer texto en PDFs escaneados y producir un PDF buscable.
 
-- salida 210 × 297 mm;
-- vertical;
-- conservar proporción;
-- no recortar;
-- no deformar;
-- centrar contenido;
-- páginas horizontales se ajustan dentro de A4 vertical;
-- Carta, Legal, Oficio, A3, etc. se ajustan a A4;
-- opción de no ampliar contenido pequeño.
+Objetivo:
 
-## 4. Foliación
+- conservar visualmente la página original;
+- añadir una capa de texto reconocida;
+- permitir selección de idioma cuando sea necesario;
+- exportar opcionalmente el texto reconocido.
 
-Modos: Número, Letras, Número + letras.
+Tecnología candidata: Tesseract/OCRmyPDF u otra solución local y libre compatible.
 
-Sentido: Ascendente o Descendente.
+## 4. PDF a JPG / PNG / WEBP
 
-Inicio configurable.
-
-Posiciones: superior derecha, superior izquierda, superior centro, inferior derecha, inferior izquierda, inferior centro y futura posición personalizada.
-
-### Regla número + letras
-
-Número arriba y texto en letras debajo. Cuando la posición es derecha, ambos terminan exactamente en el mismo borde derecho.
-
-```text
-                         125
-             CIENTO VEINTICINCO
-```
-
-## 5. Foliación correlativa
-
-Seleccionar dos o más expedientes y definir su orden.
-
-Ejemplo:
-
-- Expediente A: 350 páginas.
-- Expediente B: 120 páginas.
-- Expediente C: 600 páginas.
-
-Inicio 1, ascendente:
-
-- A: 1–350.
-- B: 351–470.
-- C: 471–1070.
-
-Los expedientes pueden permanecer como PDFs independientes. Opción adicional: unir todos al finalizar.
-
-## 6. Certificación al reverso / Zipper
-
-Entrada: PDF principal ya unido/foliado + página o PDF de certificación.
-
-Salida: `P1, Certificación, P2, Certificación, P3, Certificación...`
-
-Caso típico: principal 1000 páginas + certificación 1 página = salida 2000 páginas.
-
-La foliación original no se modifica.
+Convertir cada página del PDF a una imagen independiente.
 
 Opciones:
 
-- insertar después de cada página;
+- formato de salida;
+- resolución/DPI;
+- calidad para JPG/WEBP;
+- rango de páginas;
+- carpeta o ZIP de salida cuando existan muchas páginas.
+
+## 5. Word a PDF
+
+Convertir DOC/DOCX/RTF/ODT a PDF.
+
+Prioridad de motores locales:
+
+1. Microsoft Word, si está disponible;
+2. LibreOffice como alternativa.
+
+El archivo original nunca debe modificarse.
+
+## 6. Excel a PDF
+
+Convertir XLS/XLSX/XLSM/XLSB/ODS a PDF.
+
+Modos previstos:
+
+- respetar configuración existente;
+- 1 página de ancho;
+- toda la hoja en 1 página.
+
+Procesar pestañas visibles en orden y respetar área de impresión cuando exista.
+
+## 7. PowerPoint a PDF
+
+Convertir PPT/PPTX/ODP a PDF preservando el orden de diapositivas.
+
+Prioridad:
+
+1. Microsoft PowerPoint local;
+2. LibreOffice como alternativa.
+
+## 8. PDF a Word
+
+Convertir PDF a un documento Word editable cuando sea técnicamente posible.
+
+Debe distinguir entre:
+
+- PDF con texto digital;
+- PDF escaneado que requiere OCR.
+
+La fidelidad dependerá de la complejidad del diseño original.
+
+## 9. PDF a Excel
+
+Extraer tablas y contenido estructurado desde PDF hacia Excel.
+
+La herramienta debe advertir que PDFs con estructuras complejas, tablas irregulares o escaneos pueden requerir OCR y revisión manual.
+
+## 10. PDF a PowerPoint
+
+Convertir páginas de PDF a una presentación.
+
+Modos potenciales:
+
+- cada página como imagen/diapositiva de alta fidelidad;
+- conversión editable cuando exista una tecnología local suficientemente fiable.
+
+## 11. JPG / PNG / WEBP a PDF
+
+Aceptar una o múltiples imágenes, permitir reordenarlas y generar un PDF.
+
+Opciones:
+
+- tamaño de página;
+- ajustar imagen manteniendo proporción;
+- orientación;
+- márgenes;
+- calidad.
+
+## 12. Proteger PDF
+
+Aplicar protección mediante contraseña y, cuando la biblioteca utilizada lo permita, permisos de uso.
+
+Opciones potenciales:
+
+- contraseña de apertura;
+- contraseña de propietario;
+- restricciones de impresión/copia/modificación.
+
+No almacenar contraseñas utilizadas.
+
+## 13. Desbloquear PDF
+
+Eliminar la protección de un PDF cuando el usuario disponga de la contraseña válida o el archivo sea legítimamente accesible.
+
+La herramienta **no estará diseñada para romper, adivinar o atacar contraseñas**.
+
+Salida: una nueva copia sin contraseña, conservando intacto el archivo original.
+
+## 14. Dividir PDF
+
+Permitir:
+
+- extraer páginas específicas;
+- dividir por rangos;
+- separar cada página;
+- dividir cada N páginas;
+- eliminar páginas no deseadas antes de exportar.
+
+## 15. Girar PDF
+
+Girar páginas seleccionadas 90°, 180° o 270°.
+
+Opciones:
+
+- todas las páginas;
+- páginas pares/impares;
+- rango personalizado;
+- páginas seleccionadas visualmente.
+
+## 16. Aplanar PDF
+
+Crear una copia consolidada para reducir problemas con elementos editables/interactivos.
+
+Según la implementación, puede aplanar:
+
+- anotaciones;
+- comentarios;
+- campos de formulario;
+- capas visuales compatibles.
+
+Debe advertirse cuando el proceso pueda eliminar editabilidad.
+
+## 17. Firmar PDF
+
+Permitir colocar una firma sobre el documento.
+
+Primera modalidad prevista:
+
+- firma visual mediante imagen/PNG;
+- posición y tamaño configurables;
+- selección de páginas.
+
+La firma digital criptográfica con certificado podrá implementarse como una modalidad separada si se valida una biblioteca y flujo adecuados.
+
+## 18. Marca de agua en PDF
+
+Añadir texto o imagen como marca de agua.
+
+Opciones:
+
+- texto/imagen;
+- opacidad;
+- tamaño;
+- rotación;
+- posición;
+- páginas seleccionadas;
+- aplicar a todas las páginas.
+
+## 19. Recortar PDF
+
+Permitir definir nuevos límites visibles de página.
+
+Opciones:
+
+- recorte manual;
+- mismo recorte para todas las páginas;
+- páginas seleccionadas;
+- previsualización antes de aplicar.
+
+## 20. Foliar PDF — herramienta especial
+
+Herramienta propia de ArbitraDocs para numerar documentos y expedientes.
+
+Modos:
+
+- número;
+- letras;
+- número + letras.
+
+Sentido:
+
+- ascendente;
+- descendente.
+
+Configuración:
+
+- número inicial;
+- posición;
+- tamaño de fuente;
+- márgenes;
+- alineación.
+
+Regla para número + letras:
+
+- número arriba;
+- texto en letras debajo;
+- cuando la posición es derecha, ambos terminan exactamente en el mismo borde derecho.
+
+Debe incluir foliación correlativa entre varios PDFs, conservando salidas separadas o permitiendo unirlas al final.
+
+## 21. Certificar PDF — herramienta especial
+
+Nombre de interfaz para la función de **certificación al reverso / zipper** desarrollada en los prototipos.
+
+Entrada:
+
+- PDF principal;
+- PDF/página de certificación.
+
+Salida conceptual:
+
+`P1, Certificación, P2, Certificación, P3, Certificación...`
+
+Opciones:
+
+- insertar certificación después de cada página;
 - insertar antes de cada página;
-- seleccionar una página específica si la certificación tiene varias;
-- adaptar la certificación al tamaño de página;
-- previsualizar total esperado.
-
-## 7. Escala de grises
-
-Opciones: Original / Escala de grises. Priorizar legibilidad y evitar rasterización innecesaria cuando técnicamente sea posible.
-
-## 8. Compresión
-
-Opciones: Original / Comprimido, con nivel o porcentaje de calidad. No se promete reducción exacta porque depende del contenido.
-
-Reporte deseado: tamaño de entrada, tamaño final y porcentaje real de reducción.
-
-## 9. Excel
-
-Procesar automáticamente todas las pestañas visibles en su orden. Las ocultas no se incluyen por defecto.
-
-### 1 página de ancho
-
-Todas las columnas caben en una página de ancho. Las filas pueden continuar en varias páginas.
-
-### Toda la hoja en 1 página
-
-Cada pestaña completa se reduce a una sola página, aunque el contenido quede pequeño.
-
-Área de impresión: respetar la definida; si no existe, utilizar el rango usado.
-
-## 10. MSG / EML
-
-Convertir primero el correo con De, Para, CC, Fecha, Asunto y cuerpo. Después incorporar sus adjuntos en el orden original.
-
-Cada adjunto compatible se procesa según su formato. Evitar tratar logos e imágenes incrustadas del cuerpo como anexos independientes cuando sea posible.
-
-Correos adjuntos dentro de otros correos: procesamiento recursivo con límite razonable.
-
-## 11. Formatos CAD y desconocidos
-
-No se requiere AutoCAD para el usuario.
-
-DWG, DXF, DWF u otros formatos sin conversor local se omiten, no detienen el expediente y aparecen en el reporte.
-
-## 12. Escrito + Anexos
-
-### Objetivo
-
-Automatizar el flujo: recibir escrito PDF + ZIP/RAR con anexos → descomprimir → detectar estructura → ordenar → convertir → unir.
-
-### Anexos sueltos
-
-`Anexo 1.pdf`, `Anexo 2.pdf`, `Anexo 3.pdf`: ordenar por numeración/orden natural.
-
-### Anexos por carpetas
-
-```text
-Anexo 1/
-  DNI.pdf
-  Constancia.jpg
-
-Anexo 2/
-  Contrato.pdf
-  Voucher.pdf
-```
-
-Recorrer subcarpetas de forma recursiva.
-
-### Sin numeración clara
-
-Usar orden natural y mostrarlo antes de procesar.
-
-### Vista previa
-
-El usuario debe poder revisar y corregir el orden detectado antes de generar el PDF.
-
-## 13. Bandeja Drag & Drop para Escrito + Anexos
-
-Permitir cualquier combinación:
-
-```text
-Escrito 1.pdf
-Anexos 1.zip
-Escrito 2.pdf
-Anexos 2.rar
-Documento adicional.pdf
-Carpeta adicional/
-```
-
-Cada elemento aparece como tarjeta o bloque reordenable.
-
-Funciones:
-
-- arrastrar archivos a la aplicación;
-- arrastrar tarjetas para cambiar el orden;
-- expandir ZIP/RAR;
-- mostrar anexos internos;
-- reordenar archivos internos;
-- mover bloques completos;
-- procesar según el orden visual final.
-
-El orden visual es la fuente de verdad para el PDF final.
-
-## 14. Reportes
-
-Cada operación compleja debe poder generar:
-
-- archivos procesados correctamente;
-- archivos omitidos;
-- razón de omisión;
-- cantidad de páginas;
-- rutas/nombres;
-- formatos incompatibles;
-- errores de conversión;
-- estadísticas relevantes.
-
-Formatos previstos: TXT, CSV y futura vista dentro de la aplicación.
-
-## 15. Normalizar nombres y rutas
-
-### Objetivo
-
-Preparar carpetas completas de expedientes antes de copiarlas, sincronizarlas o cargarlas a Windows, OneDrive, SharePoint u otros repositorios que puedan rechazar nombres o rutas problemáticas.
-
-La herramienta debe aceptar una carpeta raíz y recorrer de forma recursiva todos sus archivos y subcarpetas, sin importar la extensión de los archivos.
-
-### Modo de trabajo
-
-El flujo previsto será:
-
-1. Seleccionar carpeta principal.
-2. Analizar sin modificar nada.
-3. Mostrar problemas detectados y nombres propuestos.
-4. Permitir revisar/corregir propuestas.
-5. Aplicar cambios solo cuando el usuario confirme.
-6. Generar registro de cambios.
-
-### Problemas a detectar
-
-- nombres excesivamente largos;
-- rutas completas excesivamente largas;
-- caracteres incompatibles o problemáticos como `< > : " / \\ | ? *`;
-- saltos de línea o caracteres invisibles;
-- espacios repetidos;
-- puntos o espacios al final del nombre;
-- nombres reservados de Windows como `CON`, `PRN`, `AUX`, `NUL`, `COM1`, `LPT1`, etc.;
-- posibles colisiones de nombres después de normalizar;
-- nombres de carpetas que contribuyan a superar el límite de la ruta completa.
-
-### Reglas de seguridad
-
-- conservar siempre la extensión original del archivo;
-- no modificar el contenido del documento;
-- no sobrescribir archivos existentes;
-- resolver duplicados de forma segura, por ejemplo `Contrato.pdf`, `Contrato (2).pdf`;
-- preservar el significado del nombre tanto como sea posible;
-- evitar reemplazar nombres legibles por códigos incomprensibles salvo que sea imprescindible;
-- trabajar sobre archivos de cualquier tipo, incluidos PDF, Office, imágenes, ZIP, RAR, CAD, videos u otros, porque esta herramienta modifica nombres/rutas y no el contenido.
-
-### Perfiles previstos
-
-- **Normalización suave:** corregir únicamente caracteres y terminaciones problemáticas.
-- **Compatible con Windows:** aplicar reglas conservadoras para nombres y rutas de Windows.
-- **Compatible con OneDrive/SharePoint:** aplicar reglas y límites conservadores para sincronización/carga.
-- **Normalización estricta:** limpiar y acortar de forma más agresiva cuando el usuario lo necesite.
-
-Los límites exactos de cada perfil deben definirse y probarse antes de la versión estable, ya que pueden depender del sistema operativo, cliente de sincronización y servicio utilizado.
-
-### Vista previa
-
-Mostrar una tabla con al menos:
-
-- estado;
-- ruta/nombre actual;
-- problema detectado;
-- nombre/ruta propuesta;
-- longitud actual;
-- longitud resultante.
-
-Ejemplo conceptual:
-
-| Estado | Nombre actual | Problema | Nombre propuesto |
-|---|---|---|---|
-| Advertencia | `Anexo Nº 2 - doc:*final?.pdf` | Símbolos | `Anexo Nº 2 - doc final.pdf` |
-| Advertencia | ruta de 340 caracteres | Ruta larga | ruta abreviada |
-| Correcto | `Anexo 3.pdf` | Ninguno | Sin cambios |
-
-### Registro y deshacer
-
-Antes de aplicar cambios debe generarse un registro con el mapeo:
-
-`RUTA ORIGINAL → RUTA NUEVA`
-
-Formato mínimo previsto: CSV.
-
-Se planifica una opción **Deshacer última normalización**, siempre que la estructura no haya sido movida o modificada externamente después del cambio.
-
-### Integración con otras herramientas
-
-Además de existir como herramienta independiente, podrá ofrecerse opcionalmente antes de:
-
-- Procesar expediente;
-- Escrito + Anexos;
-- copiar/preparar una carpeta para OneDrive/SharePoint.
-
-El análisis previo nunca debe modificar automáticamente los nombres sin confirmación explícita del usuario.
+- seleccionar qué página usar si el PDF de certificación contiene varias;
+- mantener intacta la foliación del documento principal;
+- mostrar páginas finales esperadas antes de procesar.
+
+Esta herramienta es distinta de **Firmar PDF**.
+
+## 22. Normalizar nombres — herramienta especial
+
+Analizar una carpeta raíz y recorrer recursivamente archivos y subcarpetas para detectar nombres/rutas que puedan ocasionar problemas en Windows, OneDrive, SharePoint u otros sistemas.
+
+Aunque la herramienta aparezca en la suite junto a las utilidades PDF, su alcance puede incluir **cualquier tipo de archivo**, no solo PDF.
+
+Flujo:
+
+1. seleccionar carpeta;
+2. analizar sin modificar;
+3. mostrar problemas;
+4. proponer nombres/rutas;
+5. permitir correcciones manuales;
+6. aplicar únicamente después de confirmación;
+7. generar registro CSV.
+
+Detectar:
+
+- nombres demasiado largos;
+- rutas completas demasiado largas;
+- caracteres incompatibles;
+- caracteres invisibles;
+- espacios/puntos finales;
+- nombres reservados de Windows;
+- colisiones después de normalizar.
+
+Reglas:
+
+- conservar extensiones;
+- nunca sobrescribir archivos;
+- resolver duplicados de forma segura;
+- preservar nombres legibles;
+- permitir perfiles de normalización;
+- ofrecer deshacer cuando sea técnicamente seguro.
+
+## Criterios comunes de todas las herramientas
+
+- procesamiento local siempre que sea viable;
+- no modificar originales por defecto;
+- barra de progreso y cancelación segura;
+- drag & drop en herramientas donde simplifique el flujo;
+- resultados y errores comprensibles;
+- temporales controlados y eliminados al finalizar;
+- capacidad de trabajar con archivos grandes;
+- interfaz consistente en toda la suite.
