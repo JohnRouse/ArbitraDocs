@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from .core.certification import certify_pdf
 from .core.foliation import FolioOptions, foliate_pdf
 from .core.merge import merge_pdfs
 from .core.normalize import NormalizationOptions, normalize_pdf_to_a4
@@ -26,6 +27,9 @@ def _add_folio_options(parser: argparse.ArgumentParser) -> None:
         default="top-right",
     )
     parser.add_argument("--font-size", type=float, default=8.0)
+    parser.add_argument("--font-family", default="Arial")
+    parser.add_argument("--bold", action="store_true")
+    parser.add_argument("--italic", action="store_true")
     parser.add_argument("--margin-x-mm", type=float, default=10.0)
     parser.add_argument("--margin-y-mm", type=float, default=6.0)
 
@@ -50,6 +54,11 @@ def build_parser() -> argparse.ArgumentParser:
     foliate.add_argument("output")
     _add_folio_options(foliate)
 
+    certify = sub.add_parser("certify", help="Intercalar certificación al reverso de cada página")
+    certify.add_argument("input")
+    certify.add_argument("certificate")
+    certify.add_argument("output")
+
     process = sub.add_parser("process", help="Unir, normalizar y foliar")
     process.add_argument("output")
     process.add_argument("inputs", nargs="+")
@@ -70,6 +79,9 @@ def _folio_options(args: argparse.Namespace) -> FolioOptions:
         mode=args.mode,
         position=args.position,
         font_size=args.font_size,
+        font_family=args.font_family,
+        bold=args.bold,
+        italic=args.italic,
         margin_x_mm=args.margin_x_mm,
         margin_y_mm=args.margin_y_mm,
     )
@@ -94,6 +106,9 @@ def main(argv: list[str] | None = None) -> int:
 
     elif args.command == "foliate":
         foliate_pdf(args.input, args.output, _folio_options(args))
+
+    elif args.command == "certify":
+        certify_pdf(args.input, args.certificate, args.output)
 
     elif args.command == "process":
         normalization_options = NormalizationOptions(
