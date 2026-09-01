@@ -11,9 +11,7 @@
 
         <StackPanel Spacing="4">
             <TextBlock Text="Unir y foliar PDF" Style="{ThemeResource TitleTextBlockStyle}" />
-            <TextBlock
-                Text="Ordena los archivos, decide cómo tratar las páginas A4 y configura la foliación."
-                Opacity="0.72" />
+            <TextBlock Text="Ordena los archivos, decide cómo tratar las páginas A4 y configura la foliación." Opacity="0.72" />
         </StackPanel>
 
         <Grid Grid.Row="1" ColumnSpacing="22">
@@ -71,10 +69,11 @@
                 </ListView>
 
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8">
-                    <Button Content="Agregar PDF" Click="AddPdf_Click">
-                        <Button.Icon>
+                    <Button Click="AddPdf_Click">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
                             <SymbolIcon Symbol="Add" />
-                        </Button.Icon>
+                            <TextBlock Text="Agregar PDF" />
+                        </StackPanel>
                     </Button>
                     <Button Content="Quitar" Click="RemovePdf_Click" />
                     <Button Content="Subir" Click="MoveUp_Click" />
