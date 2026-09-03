@@ -11,14 +11,14 @@
         </Grid.RowDefinitions>
 
         <StackPanel Spacing="4">
-            <TextBlock Text="Unir, foliar y certificar PDF" Style="{ThemeResource TitleTextBlockStyle}" />
-            <TextBlock Text="Ordena los archivos, configura la salida, el formato A4, la foliación y la certificación al reverso." Opacity="0.72" />
+            <TextBlock Text="Preparar, unir, foliar y certificar" Style="{ThemeResource TitleTextBlockStyle}" />
+            <TextBlock Text="Combina PDFs, ZIP/RAR, carpetas y documentos compatibles; configura A4, foliación y certificación." Opacity="0.72" />
         </StackPanel>
 
         <Grid Grid.Row="1" ColumnSpacing="18">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1.08*" />
-                <ColumnDefinition Width="0.78*" />
+                <ColumnDefinition Width="0.80*" />
                 <ColumnDefinition Width="0.54*" />
             </Grid.ColumnDefinitions>
 
@@ -41,8 +41,8 @@
                     Drop="DropZone_Drop">
                     <StackPanel HorizontalAlignment="Center" Spacing="7">
                         <FontIcon Glyph="&#xE898;" FontSize="28" />
-                        <TextBlock Text="Arrastra tus PDFs aquí" FontWeight="SemiBold" HorizontalAlignment="Center" />
-                        <TextBlock Text="o usa Agregar PDF" Opacity="0.65" HorizontalAlignment="Center" />
+                        <TextBlock Text="Arrastra archivos o carpetas aquí" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                        <TextBlock Text="PDF, ZIP, RAR, Office e imágenes compatibles" Opacity="0.65" HorizontalAlignment="Center" />
                     </StackPanel>
                 </Border>
 
@@ -60,7 +60,7 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <FontIcon Glyph="&#xEA90;" VerticalAlignment="Center" />
+                                <FontIcon Glyph="&#xE8B7;" VerticalAlignment="Center" />
                                 <StackPanel Grid.Column="1">
                                     <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
                                     <TextBlock Text="{Binding Path}" FontSize="12" Opacity="0.58" TextTrimming="CharacterEllipsis" />
@@ -71,12 +71,13 @@
                 </ListView>
 
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8">
-                    <Button Click="AddPdf_Click">
+                    <Button Click="AddFiles_Click">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <SymbolIcon Symbol="Add" />
-                            <TextBlock Text="Agregar PDF" />
+                            <TextBlock Text="Agregar archivos" />
                         </StackPanel>
                     </Button>
+                    <Button Content="Agregar carpeta" Click="AddFolder_Click" />
                     <Button Content="Quitar" Click="RemovePdf_Click" />
                     <Button Content="Subir" Click="MoveUp_Click" />
                     <Button Content="Bajar" Click="MoveDown_Click" />
@@ -94,10 +95,10 @@
                                 SelectedIndex="0"
                                 HorizontalAlignment="Stretch">
                                 <ComboBoxItem Content="Unir en un solo PDF" Tag="joined" />
-                                <ComboBoxItem Content="Guardar PDFs por separado" Tag="separate" />
+                                <ComboBoxItem Content="Guardar documentos por separado" Tag="separate" />
                             </ComboBox>
                             <TextBlock
-                                Text="En modo separado, cada archivo se procesa de forma independiente y conserva su propio documento de salida."
+                                Text="El orden de esta lista manda. Dentro de ZIP/RAR o carpetas, ArbitraDocs usa orden natural recursivo (1, 2, 10; fechas de menor a mayor)."
                                 TextWrapping="Wrap"
                                 FontSize="12"
                                 Opacity="0.62" />
@@ -222,26 +223,14 @@
                                 <StackPanel Grid.Column="1" Spacing="4">
                                     <TextBlock Text="Estilo" />
                                     <StackPanel Orientation="Horizontal" Spacing="6">
-                                        <ToggleButton
-                                            x:Name="BoldButton"
-                                            Width="40"
-                                            Height="32"
-                                            Content="B"
-                                            FontWeight="Bold"
-                                            ToolTipService.ToolTip="Negrita"
-                                            IsEnabled="{Binding IsOn, ElementName=FoliateToggle}"
-                                            Checked="PreviewToggle_Changed"
-                                            Unchecked="PreviewToggle_Changed" />
-                                        <ToggleButton
-                                            x:Name="ItalicButton"
-                                            Width="40"
-                                            Height="32"
-                                            Content="I"
-                                            FontStyle="Italic"
-                                            ToolTipService.ToolTip="Cursiva"
-                                            IsEnabled="{Binding IsOn, ElementName=FoliateToggle}"
-                                            Checked="PreviewToggle_Changed"
-                                            Unchecked="PreviewToggle_Changed" />
+                                        <ToggleButton x:Name="BoldButton" Width="40" Height="32" Content="B" FontWeight="Bold"
+                                                      ToolTipService.ToolTip="Negrita"
+                                                      IsEnabled="{Binding IsOn, ElementName=FoliateToggle}"
+                                                      Checked="PreviewToggle_Changed" Unchecked="PreviewToggle_Changed" />
+                                        <ToggleButton x:Name="ItalicButton" Width="40" Height="32" Content="I" FontStyle="Italic"
+                                                      ToolTipService.ToolTip="Cursiva"
+                                                      IsEnabled="{Binding IsOn, ElementName=FoliateToggle}"
+                                                      Checked="PreviewToggle_Changed" Unchecked="PreviewToggle_Changed" />
                                     </StackPanel>
                                 </StackPanel>
                             </Grid>
@@ -252,108 +241,99 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <NumberBox
-                                    x:Name="FontSizeBox"
-                                    Header="Tamaño (pt)"
-                                    Value="8"
-                                    Minimum="5.5"
-                                    Maximum="30"
-                                    SmallChange="0.5"
-                                    SpinButtonPlacementMode="Compact"
-                                    IsEnabled="{Binding IsOn, ElementName=FoliateToggle}"
-                                    ValueChanged="PreviewNumber_ValueChanged" />
-                                <NumberBox
-                                    x:Name="FolioMarginXBox"
-                                    Grid.Column="1"
-                                    Header="Margen H (mm)"
-                                    Value="10"
-                                    Minimum="0"
-                                    Maximum="60"
-                                    SpinButtonPlacementMode="Compact"
-                                    IsEnabled="{Binding IsOn, ElementName=FoliateToggle}"
-                                    ValueChanged="PreviewNumber_ValueChanged" />
-                                <NumberBox
-                                    x:Name="FolioMarginYBox"
-                                    Grid.Column="2"
-                                    Header="Margen V (mm)"
-                                    Value="6"
-                                    Minimum="0"
-                                    Maximum="60"
-                                    SpinButtonPlacementMode="Compact"
-                                    IsEnabled="{Binding IsOn, ElementName=FoliateToggle}"
-                                    ValueChanged="PreviewNumber_ValueChanged" />
+                                <NumberBox x:Name="FontSizeBox" Header="Tamaño (pt)" Value="8" Minimum="5.5" Maximum="30" SmallChange="0.5"
+                                           SpinButtonPlacementMode="Compact" IsEnabled="{Binding IsOn, ElementName=FoliateToggle}"
+                                           ValueChanged="PreviewNumber_ValueChanged" />
+                                <NumberBox x:Name="FolioMarginXBox" Grid.Column="1" Header="Margen H (mm)" Value="10" Minimum="0" Maximum="60"
+                                           SpinButtonPlacementMode="Compact" IsEnabled="{Binding IsOn, ElementName=FoliateToggle}"
+                                           ValueChanged="PreviewNumber_ValueChanged" />
+                                <NumberBox x:Name="FolioMarginYBox" Grid.Column="2" Header="Margen V (mm)" Value="6" Minimum="0" Maximum="60"
+                                           SpinButtonPlacementMode="Compact" IsEnabled="{Binding IsOn, ElementName=FoliateToggle}"
+                                           ValueChanged="PreviewNumber_ValueChanged" />
                             </Grid>
                         </StackPanel>
                     </Expander>
 
-                    <Expander Header="Certificación al reverso" IsExpanded="False">
+                    <Expander Header="Certificación" IsExpanded="True">
                         <StackPanel Padding="4,12,4,8" Spacing="10">
                             <ToggleSwitch
                                 x:Name="CertifyToggle"
-                                Header="Agregar certificación detrás de cada página"
-                                IsOn="False" />
-                            <Button
-                                Content="Seleccionar PDF de certificación"
-                                HorizontalAlignment="Left"
-                                Click="SelectCertificate_Click"
-                                IsEnabled="{Binding IsOn, ElementName=CertifyToggle}" />
-                            <TextBlock
-                                x:Name="CertificateFileText"
-                                Text="Ningún archivo seleccionado"
-                                TextWrapping="Wrap"
-                                FontSize="12"
-                                Opacity="0.72" />
-                            <TextBlock
-                                Text="El PDF de certificación debe tener una sola página. Se insertará como P1 → Certificación → P2 → Certificación… y las hojas de certificación no recibirán folio."
-                                TextWrapping="Wrap"
-                                FontSize="12"
-                                Opacity="0.62" />
+                                Header="Aplicar certificación"
+                                IsOn="False"
+                                Toggled="CertificationToggle_Changed" />
+
+                            <ComboBox
+                                x:Name="CertificationModeCombo"
+                                Header="Tipo de certificación"
+                                SelectedIndex="0"
+                                IsEnabled="{Binding IsOn, ElementName=CertifyToggle}"
+                                SelectionChanged="CertificationMode_Changed">
+                                <ComboBoxItem Content="Hoja completa al reverso" Tag="reverse" />
+                                <ComboBoxItem Content="Sello o imagen sobre cada página" Tag="stamp" />
+                            </ComboBox>
+
+                            <StackPanel x:Name="ReverseCertificationPanel" Spacing="8" Visibility="Collapsed">
+                                <Button Content="Seleccionar PDF de certificación" HorizontalAlignment="Left" Click="SelectCertificate_Click" />
+                                <TextBlock x:Name="CertificateFileText" Text="Ningún PDF seleccionado" TextWrapping="Wrap" FontSize="12" Opacity="0.72" />
+                                <TextBlock
+                                    Text="Se genera P1 → Certificación → P2 → Certificación… Las hojas de certificación no reciben folio."
+                                    TextWrapping="Wrap" FontSize="12" Opacity="0.62" />
+                            </StackPanel>
+
+                            <StackPanel x:Name="StampCertificationPanel" Spacing="10" Visibility="Collapsed">
+                                <Button Content="Seleccionar imagen del sello" HorizontalAlignment="Left" Click="SelectStamp_Click" />
+                                <TextBlock x:Name="StampFileText" Text="Ninguna imagen seleccionada" TextWrapping="Wrap" FontSize="12" Opacity="0.72" />
+
+                                <ComboBox x:Name="StampPositionCombo" Header="Posición del sello" SelectedIndex="8" SelectionChanged="CertificationMode_Changed">
+                                    <ComboBoxItem Content="Superior izquierda" Tag="top-left" />
+                                    <ComboBoxItem Content="Superior centro" Tag="top-center" />
+                                    <ComboBoxItem Content="Superior derecha" Tag="top-right" />
+                                    <ComboBoxItem Content="Centro izquierda" Tag="center-left" />
+                                    <ComboBoxItem Content="Centro" Tag="center" />
+                                    <ComboBoxItem Content="Centro derecha" Tag="center-right" />
+                                    <ComboBoxItem Content="Inferior izquierda" Tag="bottom-left" />
+                                    <ComboBoxItem Content="Inferior centro" Tag="bottom-center" />
+                                    <ComboBoxItem Content="Inferior derecha" Tag="bottom-right" />
+                                </ComboBox>
+
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <NumberBox x:Name="StampWidthBox" Header="Ancho (mm)" Value="38" Minimum="5" Maximum="180" SmallChange="1"
+                                               SpinButtonPlacementMode="Compact" ValueChanged="PreviewNumber_ValueChanged" />
+                                    <NumberBox x:Name="StampMarginXBox" Grid.Column="1" Header="Margen H" Value="10" Minimum="0" Maximum="100"
+                                               SpinButtonPlacementMode="Compact" ValueChanged="PreviewNumber_ValueChanged" />
+                                    <NumberBox x:Name="StampMarginYBox" Grid.Column="2" Header="Margen V" Value="10" Minimum="0" Maximum="140"
+                                               SpinButtonPlacementMode="Compact" ValueChanged="PreviewNumber_ValueChanged" />
+                                </Grid>
+                                <TextBlock Text="PNG transparente recomendado. También se admite JPG, JPEG y WEBP. El tamaño conserva la proporción original."
+                                           TextWrapping="Wrap" FontSize="12" Opacity="0.62" />
+                            </StackPanel>
                         </StackPanel>
                     </Expander>
 
-                    <Button
-                        x:Name="ProcessButton"
-                        Content="Procesar PDFs"
-                        HorizontalAlignment="Stretch"
-                        Style="{ThemeResource AccentButtonStyle}"
-                        Click="ProcessButton_Click" />
-
-                    <ProgressRing
-                        x:Name="ProcessingRing"
-                        IsActive="False"
-                        Visibility="Collapsed"
-                        HorizontalAlignment="Center" />
-
-                    <InfoBar
-                        x:Name="StatusBar"
-                        IsOpen="False"
-                        IsClosable="True" />
+                    <Button x:Name="ProcessButton" Content="Procesar documentos" HorizontalAlignment="Stretch"
+                            Style="{ThemeResource AccentButtonStyle}" Click="ProcessButton_Click" />
+                    <ProgressRing x:Name="ProcessingRing" IsActive="False" Visibility="Collapsed" HorizontalAlignment="Center" />
+                    <InfoBar x:Name="StatusBar" IsOpen="False" IsClosable="True" />
                 </StackPanel>
             </ScrollViewer>
 
-            <Border
-                Grid.Column="2"
-                Padding="16"
-                CornerRadius="10"
-                BorderThickness="1"
-                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                VerticalAlignment="Top">
+            <Border Grid.Column="2" Padding="16" CornerRadius="10" BorderThickness="1"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" VerticalAlignment="Top">
                 <StackPanel Spacing="12">
                     <StackPanel Spacing="2">
                         <TextBlock Text="Vista previa" FontWeight="SemiBold" FontSize="16" />
-                        <TextBlock Text="Posición, fuente y estilo del folio" FontSize="12" Opacity="0.62" />
+                        <TextBlock Text="Folio y sello sobre una hoja A4" FontSize="12" Opacity="0.62" />
                     </StackPanel>
 
                     <Viewbox Stretch="Uniform" HorizontalAlignment="Center" MaxHeight="430">
-                        <Border
-                            x:Name="PreviewSheet"
-                            Width="252"
-                            Height="356"
-                            Background="White"
-                            BorderBrush="#C9C9C9"
-                            BorderThickness="1">
-                            <Grid x:Name="PreviewPage" Margin="0">
+                        <Border x:Name="PreviewSheet" Width="252" Height="356" Background="White" BorderBrush="#C9C9C9" BorderThickness="1">
+                            <Grid x:Name="PreviewPage">
                                 <StackPanel Margin="35,70,35,0" Spacing="7" Opacity="0.16" VerticalAlignment="Top">
                                     <Rectangle Height="7" Fill="#444444" />
                                     <Rectangle Height="5" Fill="#777777" />
@@ -366,27 +346,23 @@
                                     <Rectangle Height="5" Fill="#777777" Width="155" HorizontalAlignment="Left" />
                                 </StackPanel>
 
-                                <TextBlock
-                                    x:Name="PreviewFolioText"
-                                    Foreground="#111111"
-                                    Text="1&#x0a;UNO"
-                                    FontSize="9"
-                                    MaxWidth="220"
-                                    TextWrapping="Wrap"
-                                    TextAlignment="Right"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Top"
-                                    Margin="0,8,12,0" />
+                                <Image x:Name="PreviewStampImage" Visibility="Collapsed" Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+
+                                <Border x:Name="PreviewReverseBadge" Visibility="Collapsed" Padding="10" CornerRadius="6"
+                                        Background="#110078D4" BorderBrush="#660078D4" BorderThickness="1"
+                                        HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock Text="CERTIFICACIÓN&#x0a;AL REVERSO" Foreground="#005A9E" FontWeight="SemiBold" TextAlignment="Center" />
+                                </Border>
+
+                                <TextBlock x:Name="PreviewFolioText" Foreground="#111111" Text="1&#x0a;UNO" FontSize="9" MaxWidth="220"
+                                           TextWrapping="Wrap" TextAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                           Margin="0,8,12,0" />
                             </Grid>
                         </Border>
                     </Viewbox>
 
-                    <TextBlock
-                        x:Name="PreviewHint"
-                        Text="La vista previa representa el folio. El documento real conserva su contenido original."
-                        TextWrapping="Wrap"
-                        FontSize="12"
-                        Opacity="0.62" />
+                    <TextBlock x:Name="PreviewHint" Text="La vista previa representa la posición aproximada del folio y la certificación."
+                               TextWrapping="Wrap" FontSize="12" Opacity="0.62" />
                 </StackPanel>
             </Border>
         </Grid>
