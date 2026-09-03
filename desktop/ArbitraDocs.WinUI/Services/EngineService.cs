@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.Globalization;
+using System.Text.Json;
+using ArbitraDocs.WinUI.Models;
 
 namespace ArbitraDocs.WinUI.Services;
 
@@ -30,6 +32,47 @@ public sealed record DocumentProcessOptions(
 
 public sealed class EngineService
 {
+    public async Task<FileInventoryResult> MapFilesAsync(
+        string source,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(source) || (!File.Exists(source) && !Directory.Exists(source)))
+        {
+            throw new ArgumentException("Selecciona una carpeta, ZIP o RAR válido.", nameof(source));
+        }
+
+        var enginePath = FindEngine();
+        var tempJson = Path.Combine(Path.GetTempPath(), $"ArbitraDocs_inventory_{Guid.NewGuid():N}.json");
+        try
+        {
+            await RunEngineAsync(
+                enginePath,
+                new[] { "map", source, tempJson },
+                cancellationToken);
+
+            var json = await File.ReadAllTextAsync(tempJson, cancellationToken);
+            var result = JsonSerializer.Deserialize<FileInventoryResult>(
+                json,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return result ?? throw new InvalidOperationException("El motor no devolvió un inventario válido.");
+        }
+        finally
+        {
+            try
+            {
+                if (File.Exists(tempJson))
+                {
+                    File.Delete(tempJson);
+                }
+            }
+            catch
+            {
+                // Un temporal bloqueado no debe impedir mostrar el resultado.
+            }
+        }
+    }
+
     public async Task ProcessAsync(
         IReadOnlyList<string> inputSources,
         string outputPdf,
