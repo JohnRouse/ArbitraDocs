@@ -373,7 +373,7 @@ public sealed partial class FileInventoryPage : Page
     {
         BusyRing.IsActive = busy;
         BusyRing.Visibility = busy ? Visibility.Visible : Visibility.Collapsed;
-        DropZone.IsEnabled = !busy;
+        DropZone.IsHitTestVisible = !busy;
     }
 
     private void ShowStatus(string message, InfoBarSeverity severity)
