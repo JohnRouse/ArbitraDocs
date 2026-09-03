@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 
 from .core.certification import StampOptions, certify_pdf, stamp_certification
+from .core.file_inventory import write_inventory_json
 from .core.foliation import FolioOptions, foliate_pdf
 from .core.input_sources import merge_document_sources
 from .core.normalize import NormalizationOptions, normalize_pdf_to_a4
@@ -41,6 +42,10 @@ def build_parser() -> argparse.ArgumentParser:
     merge = sub.add_parser("merge", help="Unir PDFs, carpetas, ZIP/RAR, imágenes y documentos compatibles")
     merge.add_argument("output")
     merge.add_argument("inputs", nargs="+")
+
+    inventory = sub.add_parser("map", help="Mapear el contenido de una carpeta, ZIP o RAR")
+    inventory.add_argument("source")
+    inventory.add_argument("output")
 
     normalize = sub.add_parser("normalize", help="Normalizar PDF a A4 vertical")
     normalize.add_argument("input")
@@ -111,6 +116,9 @@ def main(argv: list[str] | None = None) -> int:
         _, warnings = merge_document_sources(args.inputs, args.output)
         for warning in warnings:
             print(f"ADVERTENCIA: {warning}")
+
+    elif args.command == "map":
+        write_inventory_json(args.source, args.output)
 
     elif args.command == "normalize":
         normalize_pdf_to_a4(
