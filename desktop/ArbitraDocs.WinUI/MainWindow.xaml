@@ -25,6 +25,12 @@
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
 
+            <NavigationViewItem Content="Mapear archivos" Tag="inventory">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE8B7;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+
             <NavigationViewItemHeader Content="Suite documental" />
 
             <NavigationViewItem Content="Herramientas PDF" Tag="pdf">
