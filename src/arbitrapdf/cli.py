@@ -3,9 +3,9 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from .core.certification import certify_pdf
+from .core.certification import StampOptions, certify_pdf, stamp_certification
 from .core.foliation import FolioOptions, foliate_pdf
-from .core.merge import merge_pdfs
+from .core.input_sources import merge_document_sources
 from .core.normalize import NormalizationOptions, normalize_pdf_to_a4
 from .core.pipeline import merge_normalize_and_foliate
 
@@ -38,7 +38,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="arbitradocs-engine")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    merge = sub.add_parser("merge", help="Unir PDFs en el orden indicado")
+    merge = sub.add_parser("merge", help="Unir PDFs, carpetas, ZIP/RAR, imágenes y documentos compatibles")
     merge.add_argument("output")
     merge.add_argument("inputs", nargs="+")
 
@@ -59,7 +59,24 @@ def build_parser() -> argparse.ArgumentParser:
     certify.add_argument("certificate")
     certify.add_argument("output")
 
-    process = sub.add_parser("process", help="Unir, normalizar y foliar")
+    stamp = sub.add_parser("stamp-certify", help="Colocar imagen de certificación sobre todas las páginas")
+    stamp.add_argument("input")
+    stamp.add_argument("stamp_image")
+    stamp.add_argument("output")
+    stamp.add_argument(
+        "--position",
+        choices=[
+            "top-left", "top-center", "top-right",
+            "center-left", "center", "center-right",
+            "bottom-left", "bottom-center", "bottom-right",
+        ],
+        default="bottom-right",
+    )
+    stamp.add_argument("--width-mm", type=float, default=38.0)
+    stamp.add_argument("--margin-x-mm", type=float, default=10.0)
+    stamp.add_argument("--margin-y-mm", type=float, default=10.0)
+
+    process = sub.add_parser("process", help="Unir, normalizar y foliar PDFs")
     process.add_argument("output")
     process.add_argument("inputs", nargs="+")
     process.add_argument("--no-normalize", action="store_true")
@@ -91,7 +108,9 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
 
     if args.command == "merge":
-        merge_pdfs(args.inputs, args.output)
+        _, warnings = merge_document_sources(args.inputs, args.output)
+        for warning in warnings:
+            print(f"ADVERTENCIA: {warning}")
 
     elif args.command == "normalize":
         normalize_pdf_to_a4(
@@ -109,6 +128,19 @@ def main(argv: list[str] | None = None) -> int:
 
     elif args.command == "certify":
         certify_pdf(args.input, args.certificate, args.output)
+
+    elif args.command == "stamp-certify":
+        stamp_certification(
+            args.input,
+            args.stamp_image,
+            args.output,
+            StampOptions(
+                position=args.position,
+                width_mm=args.width_mm,
+                margin_x_mm=args.margin_x_mm,
+                margin_y_mm=args.margin_y_mm,
+            ),
+        )
 
     elif args.command == "process":
         normalization_options = NormalizationOptions(
