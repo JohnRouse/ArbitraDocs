@@ -20,24 +20,37 @@ public sealed record DocumentProcessOptions(
     double FolioMarginXmm,
     double FolioMarginYmm,
     bool Certify,
-    string? CertificatePdf);
+    string CertificationMode,
+    string? CertificatePdf,
+    string? StampImage,
+    string StampPosition,
+    double StampWidthMm,
+    double StampMarginXmm,
+    double StampMarginYmm);
 
 public sealed class EngineService
 {
     public async Task ProcessAsync(
-        IReadOnlyList<string> inputPdfs,
+        IReadOnlyList<string> inputSources,
         string outputPdf,
         DocumentProcessOptions options,
         CancellationToken cancellationToken = default)
     {
-        if (inputPdfs.Count == 0)
+        if (inputSources.Count == 0)
         {
-            throw new ArgumentException("No hay PDFs para procesar.", nameof(inputPdfs));
+            throw new ArgumentException("No hay documentos para procesar.", nameof(inputSources));
         }
 
-        if (options.Certify && (string.IsNullOrWhiteSpace(options.CertificatePdf) || !File.Exists(options.CertificatePdf)))
+        if (options.Certify && options.CertificationMode == "reverse" &&
+            (string.IsNullOrWhiteSpace(options.CertificatePdf) || !File.Exists(options.CertificatePdf)))
         {
             throw new ArgumentException("Selecciona un PDF de certificación válido.", nameof(options));
+        }
+
+        if (options.Certify && options.CertificationMode == "stamp" &&
+            (string.IsNullOrWhiteSpace(options.StampImage) || !File.Exists(options.StampImage)))
+        {
+            throw new ArgumentException("Selecciona una imagen de sello válida.", nameof(options));
         }
 
         var enginePath = FindEngine();
@@ -47,7 +60,7 @@ public sealed class EngineService
         {
             var merged = Path.Combine(tempRoot.FullName, "01_merged.pdf");
             var mergeArgs = new List<string> { "merge", merged };
-            mergeArgs.AddRange(inputPdfs);
+            mergeArgs.AddRange(inputSources);
             await RunEngineAsync(enginePath, mergeArgs, cancellationToken);
 
             var current = merged;
@@ -123,10 +136,32 @@ public sealed class EngineService
 
             if (options.Certify)
             {
-                await RunEngineAsync(
-                    enginePath,
-                    new[] { "certify", current, options.CertificatePdf!, outputPdf },
-                    cancellationToken);
+                if (options.CertificationMode == "stamp")
+                {
+                    var args = new[]
+                    {
+                        "stamp-certify",
+                        current,
+                        options.StampImage!,
+                        outputPdf,
+                        "--position",
+                        options.StampPosition,
+                        "--width-mm",
+                        Invariant(options.StampWidthMm),
+                        "--margin-x-mm",
+                        Invariant(options.StampMarginXmm),
+                        "--margin-y-mm",
+                        Invariant(options.StampMarginYmm),
+                    };
+                    await RunEngineAsync(enginePath, args, cancellationToken);
+                }
+                else
+                {
+                    await RunEngineAsync(
+                        enginePath,
+                        new[] { "certify", current, options.CertificatePdf!, outputPdf },
+                        cancellationToken);
+                }
             }
             else if (!options.Foliate)
             {
