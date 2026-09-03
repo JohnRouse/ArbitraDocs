@@ -30,6 +30,12 @@ public sealed partial class MainWindow : Window
         ContentFrame.Navigate(typeof(MergeFolioPage));
     }
 
+    public void NavigateToInventory()
+    {
+        SelectNavigationItem("inventory");
+        ContentFrame.Navigate(typeof(FileInventoryPage));
+    }
+
     private void NavigateHome()
     {
         SelectNavigationItem("home");
@@ -66,6 +72,9 @@ public sealed partial class MainWindow : Window
                 break;
             case "mergefolio":
                 ContentFrame.Navigate(typeof(MergeFolioPage));
+                break;
+            case "inventory":
+                ContentFrame.Navigate(typeof(FileInventoryPage));
                 break;
             case "pdf":
                 ContentFrame.Navigate(typeof(CatalogPage), "pdf");
