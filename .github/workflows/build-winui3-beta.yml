@@ -1,0 +1,59 @@
+name: Build WinUI3 Beta
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [dev/winui3-shell]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Prepare OCR and archive runtimes
+        shell: pwsh
+        run: |
+          choco install tesseract --no-progress -y
+          choco install 7zip --no-progress -y
+          $tesseract = 'C:\Program Files\Tesseract-OCR'
+          $sevenZip = 'C:\Program Files\7-Zip'
+          if (!(Test-Path $tesseract)) { throw 'Tesseract-OCR was not installed' }
+          if (!(Test-Path (Join-Path $sevenZip '7z.exe'))) { throw '7-Zip was not installed' }
+          $tessdata = Join-Path $tesseract 'tessdata'
+          Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/tesseract-ocr/tessdata_fast/main/spa.traineddata' -OutFile (Join-Path $tessdata 'spa.traineddata')
+
+      - name: Prepare Python engine
+        run: |
+          python -m pip install -e .
+          python -m pip install pytest pyinstaller
+          pytest -q
+          pyinstaller --noconfirm --clean --onefile --console --name ArbitraDocs.Engine --paths src --collect-all pymupdf tools/engine_entry.py
+
+      - name: Publish WinUI app
+        run: dotnet publish desktop/ArbitraDocs.WinUI/ArbitraDocs.WinUI.csproj -c Release -r win-x64 --self-contained true -o artifacts/publish /p:PublishTrimmed=false /p:PublishSingleFile=false
+
+      - name: Assemble beta folder
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path artifacts/publish/Engine | Out-Null
+          Copy-Item dist/ArbitraDocs.Engine.exe artifacts/publish/Engine/ArbitraDocs.Engine.exe
+          Copy-Item 'C:\Program Files\Tesseract-OCR' artifacts/publish/Engine/Tesseract-OCR -Recurse
+          Copy-Item 'C:\Program Files\7-Zip' artifacts/publish/Engine/7-Zip -Recurse
+          if (!(Test-Path artifacts/publish/Engine/Tesseract-OCR/tessdata/spa.traineddata)) { throw 'Spanish OCR data was not packaged' }
+          if (!(Test-Path artifacts/publish/Engine/7-Zip/7z.exe)) { throw '7-Zip was not packaged' }
+          if (!(Test-Path artifacts/publish/ArbitraDocs.exe)) { throw 'ArbitraDocs.exe was not generated' }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ArbitraDocs-WinUI3-Beta
+          path: artifacts/publish/**
+          retention-days: 14
