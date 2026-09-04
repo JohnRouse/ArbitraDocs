@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 
 from .core.certification import StampOptions, certify_pdf, stamp_certification
-from .core.expedient_analysis import write_expedient_analysis_json
+from .core.expedient_analysis_v2 import write_expedient_analysis_json
 from .core.file_inventory import write_inventory_json
 from .core.foliation import FolioOptions, foliate_pdf
 from .core.input_sources import merge_document_sources
