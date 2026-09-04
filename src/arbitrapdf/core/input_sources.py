@@ -5,6 +5,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import uuid
 import zipfile
@@ -60,21 +61,24 @@ def _safe_extract_zip(archive: Path, destination: Path) -> None:
 
 
 def _find_7zip() -> str | None:
+    engine_dir = Path(sys.executable).resolve().parent
     candidates = [
+        engine_dir / "7-Zip" / "7z.exe",
+        engine_dir.parent / "7-Zip" / "7z.exe",
         shutil.which("7z"),
         shutil.which("7zz"),
         shutil.which("7z.exe"),
-        str(Path(os.environ.get("ProgramFiles", r"C:\Program Files")) / "7-Zip" / "7z.exe"),
-        str(Path(os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")) / "7-Zip" / "7z.exe"),
+        Path(os.environ.get("ProgramFiles", r"C:\Program Files")) / "7-Zip" / "7z.exe",
+        Path(os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")) / "7-Zip" / "7z.exe",
     ]
     for candidate in candidates:
         if candidate and Path(candidate).is_file():
-            return candidate
+            return str(candidate)
     return None
 
 
 def _extract_rar(archive: Path, destination: Path) -> None:
-    """Extrae RAR usando 7-Zip si existe y, en Windows moderno, tar/Shell como respaldo."""
+    """Extrae RAR usando primero el 7-Zip incluido con ArbitraDocs."""
     destination.mkdir(parents=True, exist_ok=True)
 
     seven_zip = _find_7zip()
@@ -129,10 +133,7 @@ exit 4
         if result.returncode == 0 and any(destination.rglob("*")):
             return
 
-    raise RuntimeError(
-        "No se pudo extraer el RAR. En Windows 11 ArbitraDocs intentará usar el soporte nativo; "
-        "si no está disponible, instala 7-Zip para habilitar RAR."
-    )
+    raise RuntimeError("No se pudo extraer el RAR con el motor incluido ni con los mecanismos disponibles en Windows.")
 
 
 def _image_to_pdf(image: Path, output_pdf: Path) -> Path:
