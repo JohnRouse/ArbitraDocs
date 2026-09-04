@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 
 from .core.certification import StampOptions, certify_pdf, stamp_certification
+from .core.expedient_analysis import write_expedient_analysis_json
 from .core.file_inventory import write_inventory_json
 from .core.foliation import FolioOptions, foliate_pdf
 from .core.input_sources import merge_document_sources
@@ -46,6 +47,14 @@ def build_parser() -> argparse.ArgumentParser:
     inventory = sub.add_parser("map", help="Mapear el contenido de una carpeta, ZIP o RAR")
     inventory.add_argument("source")
     inventory.add_argument("output")
+
+    analyze = sub.add_parser(
+        "analyze-expedient",
+        help="Analizar escrito y anexos para detectar contratos, cláusulas arbitrales y comprobantes",
+    )
+    analyze.add_argument("source")
+    analyze.add_argument("output_directory")
+    analyze.add_argument("result_json")
 
     normalize = sub.add_parser("normalize", help="Normalizar PDF a A4 vertical")
     normalize.add_argument("input")
@@ -111,17 +120,26 @@ def _folio_options(args: argparse.Namespace) -> FolioOptions:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    result_path: Path | None = None
 
     if args.command == "merge":
         _, warnings = merge_document_sources(args.inputs, args.output)
         for warning in warnings:
             print(f"ADVERTENCIA: {warning}")
+        result_path = Path(args.output)
 
     elif args.command == "map":
-        write_inventory_json(args.source, args.output)
+        result_path = write_inventory_json(args.source, args.output)
+
+    elif args.command == "analyze-expedient":
+        result_path = write_expedient_analysis_json(
+            args.source,
+            args.output_directory,
+            args.result_json,
+        )
 
     elif args.command == "normalize":
-        normalize_pdf_to_a4(
+        result_path = normalize_pdf_to_a4(
             args.input,
             args.output,
             NormalizationOptions(
@@ -132,13 +150,13 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     elif args.command == "foliate":
-        foliate_pdf(args.input, args.output, _folio_options(args))
+        result_path = foliate_pdf(args.input, args.output, _folio_options(args))
 
     elif args.command == "certify":
-        certify_pdf(args.input, args.certificate, args.output)
+        result_path = certify_pdf(args.input, args.certificate, args.output)
 
     elif args.command == "stamp-certify":
-        stamp_certification(
+        result_path = stamp_certification(
             args.input,
             args.stamp_image,
             args.output,
@@ -156,7 +174,7 @@ def main(argv: list[str] | None = None) -> int:
             preserve_a4=not args.no_preserve_a4,
             enlarge_small_pages=args.enlarge_small,
         )
-        merge_normalize_and_foliate(
+        result_path = merge_normalize_and_foliate(
             args.inputs,
             args.output,
             normalize=not args.no_normalize,
@@ -164,7 +182,8 @@ def main(argv: list[str] | None = None) -> int:
             folio_options=None if args.no_foliate else _folio_options(args),
         )
 
-    print(Path(args.output).resolve())
+    if result_path is not None:
+        print(result_path.resolve())
     return 0
 
 
