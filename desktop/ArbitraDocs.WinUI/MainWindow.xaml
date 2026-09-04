@@ -31,6 +31,12 @@
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
 
+            <NavigationViewItem Content="Analizar expediente" Tag="analysis">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE9D9;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+
             <NavigationViewItemHeader Content="Suite documental" />
 
             <NavigationViewItem Content="Herramientas PDF" Tag="pdf">
