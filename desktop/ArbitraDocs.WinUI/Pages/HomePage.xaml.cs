@@ -10,6 +10,7 @@ public sealed partial class HomePage : Page
     {
         new() { Key = "mergefolio", Name = "Preparar PDFs", Description = "Une o mantiene separados documentos, normaliza a A4, folia y certifica al reverso o con sello sobre página.", Available = true },
         new() { Key = "inventory", Name = "Mapear archivos", Description = "Inventaría carpetas, ZIP y RAR mostrando subcarpetas, archivos, extensiones y tamaños.", Available = true },
+        new() { Key = "analysis", Name = "Analizar expediente", Description = "Detecta contratos, fechas, cláusulas arbitrales y comprobantes; usa OCR automáticamente cuando una página es solo imagen.", Available = true },
         new() { Key = "compress", Name = "Comprimir PDF", Description = "Reducir el peso de un documento PDF.", Available = false },
         new() { Key = "ocr", Name = "OCR en PDF", Description = "Reconocer texto dentro de PDFs escaneados.", Available = false },
         new() { Key = "split", Name = "Dividir PDF", Description = "Separar páginas o rangos en nuevos documentos.", Available = false },
@@ -42,6 +43,10 @@ public sealed partial class HomePage : Page
         else if (tool.Key == "inventory")
         {
             App.MainWindow.NavigateToInventory();
+        }
+        else if (tool.Key == "analysis")
+        {
+            App.MainWindow.NavigateToAnalysis();
         }
     }
 }
