@@ -36,6 +36,12 @@ public sealed partial class MainWindow : Window
         ContentFrame.Navigate(typeof(FileInventoryPage));
     }
 
+    public void NavigateToAnalysis()
+    {
+        SelectNavigationItem("analysis");
+        ContentFrame.Navigate(typeof(ExpedientAnalysisPage));
+    }
+
     private void NavigateHome()
     {
         SelectNavigationItem("home");
@@ -75,6 +81,9 @@ public sealed partial class MainWindow : Window
                 break;
             case "inventory":
                 ContentFrame.Navigate(typeof(FileInventoryPage));
+                break;
+            case "analysis":
+                ContentFrame.Navigate(typeof(ExpedientAnalysisPage));
                 break;
             case "pdf":
                 ContentFrame.Navigate(typeof(CatalogPage), "pdf");
