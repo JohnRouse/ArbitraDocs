@@ -19,7 +19,7 @@
                 IsClosable="False"
                 Severity="Informational"
                 Title="Beta WinUI 3"
-                Message="Preparar PDFs y Mapear archivos ya están conectadas al motor real. Las siguientes herramientas se irán habilitando progresivamente." />
+                Message="Preparar PDFs, Mapear archivos y Analizar expediente ya están conectadas al motor local. Las siguientes herramientas se irán habilitando progresivamente." />
 
             <TextBlock
                 Margin="0,10,0,0"
