@@ -19,12 +19,15 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Prepare OCR runtime
+      - name: Prepare OCR and archive runtimes
         shell: pwsh
         run: |
           choco install tesseract --no-progress -y
+          choco install 7zip --no-progress -y
           $tesseract = 'C:\Program Files\Tesseract-OCR'
+          $sevenZip = 'C:\Program Files\7-Zip'
           if (!(Test-Path $tesseract)) { throw 'Tesseract-OCR was not installed' }
+          if (!(Test-Path (Join-Path $sevenZip '7z.exe'))) { throw '7-Zip was not installed' }
           $tessdata = Join-Path $tesseract 'tessdata'
           Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/tesseract-ocr/tessdata_fast/main/spa.traineddata' -OutFile (Join-Path $tessdata 'spa.traineddata')
 
@@ -44,7 +47,9 @@ jobs:
           New-Item -ItemType Directory -Force -Path artifacts/publish/Engine | Out-Null
           Copy-Item dist/ArbitraDocs.Engine.exe artifacts/publish/Engine/ArbitraDocs.Engine.exe
           Copy-Item 'C:\Program Files\Tesseract-OCR' artifacts/publish/Engine/Tesseract-OCR -Recurse
+          Copy-Item 'C:\Program Files\7-Zip' artifacts/publish/Engine/7-Zip -Recurse
           if (!(Test-Path artifacts/publish/Engine/Tesseract-OCR/tessdata/spa.traineddata)) { throw 'Spanish OCR data was not packaged' }
+          if (!(Test-Path artifacts/publish/Engine/7-Zip/7z.exe)) { throw '7-Zip was not packaged' }
           if (!(Test-Path artifacts/publish/ArbitraDocs.exe)) { throw 'ArbitraDocs.exe was not generated' }
 
       - uses: actions/upload-artifact@v4
