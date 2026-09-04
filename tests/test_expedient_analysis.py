@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pymupdf as fitz
 
-from arbitrapdf.core.expedient_analysis import analyze_expedient
+from arbitrapdf.core.expedient_analysis_v2 import analyze_expedient
 
 
 def _write_pdf(path: Path, pages: list[str]) -> None:
@@ -36,7 +36,7 @@ def test_analyze_expedient_detects_contract_clause_and_payment(tmp_path: Path) -
         source / "Comprobante tasa solicitud arbitral.pdf",
         [
             "COMPROBANTE DE PAGO\nPago por solicitud arbitral\n"
-            "Fecha 04/09/2026\nImporte S/ 1,500.00\nOperacion: ABC12345\n" +
+            "Fecha 04/09/2026\nImporte S/ 1,500.00\nNumero de operacion: ABC12345\n" +
             "Constancia de transferencia bancaria correspondiente a la tasa de presentacion. " * 6,
         ],
     )
@@ -61,3 +61,63 @@ def test_analyze_expedient_detects_contract_clause_and_payment(tmp_path: Path) -
 
     assert (output / "RESUMEN.csv").is_file()
     assert (output / "RESULTADO.json").is_file()
+
+
+def test_mentions_do_not_become_contracts_or_payments(tmp_path: Path) -> None:
+    source = tmp_path / "expediente"
+    source.mkdir()
+
+    # Simula una solicitud arbitral que menciona repetidamente un contrato y un pago,
+    # pero no es en sí misma ni el contrato ni el comprobante.
+    _write_pdf(
+        source / "Solicitud de arbitraje.pdf",
+        [
+            "SOLICITUD DE ARBITRAJE\n"
+            "El 2 de octubre de 2025 las partes suscribieron el Contrato No. 4620005715.\n"
+            "El convenio arbitral se encuentra regulado en la clausula Solucion de controversias.\n"
+            "Se adjunta como Anexo 11 el pago de tasa por solicitud arbitral. " * 5,
+            "PRETENSIONES\nQue el Tribunal Arbitral declare la nulidad de la resolucion del Contrato. " * 8,
+        ],
+    )
+
+    # Contrato real: la palabra CONTRATO aparece como encabezado y hay estructura contractual.
+    _write_pdf(
+        source / "Anexo 4.pdf",
+        [
+            "CONTRATO N° 4620005715\n"
+            "Conste por el presente documento el contrato que celebran el Contratante y el Contratista.\n"
+            "Las Partes acuerdan el objeto del contrato y las siguientes clausulas. " * 5,
+            "SOLUCION DE CONTROVERSIAS\n"
+            "Toda controversia sera dirimida ante un tribunal arbitral administrado por el Centro de Arbitraje. " * 6,
+            "Para constancia se firma el 02 de octubre de 2025. " * 4,
+        ],
+    )
+
+    # Comprobante real con evidencia financiera fuerte.
+    _write_pdf(
+        source / "Anexo 11.pdf",
+        [
+            "BCP\nPAGO DE SERVICIO EXITOSO\nS/ 590.00\n"
+            "Jueves, 03 Septiembre 2026\nPagado a Camara de Comercio de Lima\n"
+            "Centro de Arbitraje\nCUENTA DE AHORRO\nNumero de operacion 04101223\n" * 4,
+        ],
+    )
+
+    # Temporal de Word: debe ignorarse silenciosamente.
+    (source / "~$ina Energy - Solicitud de arbitraje.docx").write_bytes(b"temporary")
+
+    output = tmp_path / "resultado"
+    result = analyze_expedient(source, output)
+
+    assert result.documents_analyzed == 3
+    assert len(result.contracts) == 1
+    assert result.contracts[0].title.startswith("CONTRATO N° 4620005715")
+    assert result.contracts[0].issue_date == "02/10/2025"
+    assert result.contracts[0].arbitration_clause_pages == [2]
+
+    assert len(result.payments) == 1
+    assert result.payments[0].amount == "S/ 590.00"
+    assert result.payments[0].date == "03/09/2026"
+    assert result.payments[0].operation == "04101223"
+
+    assert not any("~$ina Energy" in warning for warning in result.warnings)
