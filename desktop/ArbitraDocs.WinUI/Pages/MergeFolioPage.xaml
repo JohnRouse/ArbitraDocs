@@ -17,9 +17,9 @@
 
         <Grid Grid.Row="1" ColumnSpacing="18">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.08*" />
-                <ColumnDefinition Width="0.80*" />
-                <ColumnDefinition Width="0.54*" />
+                <ColumnDefinition Width="*" MinWidth="360" />
+                <ColumnDefinition Width="440" />
+                <ColumnDefinition Width="300" />
             </Grid.ColumnDefinitions>
 
             <Grid RowSpacing="12">
@@ -85,7 +85,7 @@
                 </StackPanel>
             </Grid>
 
-            <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel Spacing="14" Padding="0,0,4,16">
                     <Expander Header="Resultado" IsExpanded="True">
                         <StackPanel Padding="4,12,4,8" Spacing="10">
@@ -145,8 +145,8 @@
 
                             <Grid ColumnSpacing="10">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="195" />
+                                    <ColumnDefinition Width="195" />
                                 </Grid.ColumnDefinitions>
                                 <NumberBox
                                     x:Name="StartNumberBox"
@@ -162,6 +162,7 @@
                                     Grid.Column="1"
                                     Header="Dirección"
                                     SelectedIndex="0"
+                                    HorizontalAlignment="Stretch"
                                     IsEnabled="{Binding IsOn, ElementName=FoliateToggle}">
                                     <ComboBoxItem Content="Ascendente" Tag="asc" />
                                     <ComboBoxItem Content="Descendente" Tag="desc" />
@@ -170,13 +171,14 @@
 
                             <Grid ColumnSpacing="10">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="195" />
+                                    <ColumnDefinition Width="195" />
                                 </Grid.ColumnDefinitions>
                                 <ComboBox
                                     x:Name="ModeCombo"
                                     Header="Formato"
                                     SelectedIndex="2"
+                                    HorizontalAlignment="Stretch"
                                     IsEnabled="{Binding IsOn, ElementName=FoliateToggle}"
                                     SelectionChanged="PreviewSelection_Changed">
                                     <ComboBoxItem Content="Número" Tag="numero" />
@@ -188,6 +190,7 @@
                                     Grid.Column="1"
                                     Header="Posición"
                                     SelectedIndex="2"
+                                    HorizontalAlignment="Stretch"
                                     IsEnabled="{Binding IsOn, ElementName=FoliateToggle}"
                                     SelectionChanged="PreviewSelection_Changed">
                                     <ComboBoxItem Content="Superior izquierda" Tag="top-left" />
@@ -201,13 +204,14 @@
 
                             <Grid ColumnSpacing="10">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="294" />
+                                    <ColumnDefinition Width="96" />
                                 </Grid.ColumnDefinitions>
                                 <ComboBox
                                     x:Name="FontFamilyCombo"
                                     Header="Fuente"
                                     SelectedIndex="1"
+                                    HorizontalAlignment="Stretch"
                                     IsEnabled="{Binding IsOn, ElementName=FoliateToggle}"
                                     SelectionChanged="PreviewSelection_Changed">
                                     <ComboBoxItem Content="Segoe UI" Tag="Segoe UI" />
@@ -237,9 +241,9 @@
 
                             <Grid ColumnSpacing="10">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="126" />
+                                    <ColumnDefinition Width="126" />
+                                    <ColumnDefinition Width="126" />
                                 </Grid.ColumnDefinitions>
                                 <NumberBox x:Name="FontSizeBox" Header="Tamaño (pt)" Value="8" Minimum="5.5" Maximum="30" SmallChange="0.5"
                                            SpinButtonPlacementMode="Compact" IsEnabled="{Binding IsOn, ElementName=FoliateToggle}"
@@ -266,6 +270,7 @@
                                 x:Name="CertificationModeCombo"
                                 Header="Tipo de certificación"
                                 SelectedIndex="0"
+                                HorizontalAlignment="Stretch"
                                 IsEnabled="{Binding IsOn, ElementName=CertifyToggle}"
                                 SelectionChanged="CertificationMode_Changed">
                                 <ComboBoxItem Content="Hoja completa al reverso" Tag="reverse" />
@@ -284,7 +289,7 @@
                                 <Button Content="Seleccionar imagen del sello" HorizontalAlignment="Left" Click="SelectStamp_Click" />
                                 <TextBlock x:Name="StampFileText" Text="Ninguna imagen seleccionada" TextWrapping="Wrap" FontSize="12" Opacity="0.72" />
 
-                                <ComboBox x:Name="StampPositionCombo" Header="Posición del sello" SelectedIndex="8" SelectionChanged="CertificationMode_Changed">
+                                <ComboBox x:Name="StampPositionCombo" Header="Posición del sello" SelectedIndex="8" HorizontalAlignment="Stretch" SelectionChanged="CertificationMode_Changed">
                                     <ComboBoxItem Content="Superior izquierda" Tag="top-left" />
                                     <ComboBoxItem Content="Superior centro" Tag="top-center" />
                                     <ComboBoxItem Content="Superior derecha" Tag="top-right" />
@@ -298,9 +303,9 @@
 
                                 <Grid ColumnSpacing="10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="126" />
+                                        <ColumnDefinition Width="126" />
+                                        <ColumnDefinition Width="126" />
                                     </Grid.ColumnDefinitions>
                                     <NumberBox x:Name="StampWidthBox" Header="Ancho (mm)" Value="38" Minimum="5" Maximum="180" SmallChange="1"
                                                SpinButtonPlacementMode="Compact" ValueChanged="PreviewNumber_ValueChanged" />
