@@ -98,10 +98,10 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Border Padding="12" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                    <StackPanel><TextBlock Text="Documentos" Opacity="0.65" /><TextBlock x:Name="DocumentsCountText" Text="0" FontSize="22" FontWeight="SemiBold" /></StackPanel>
+                    <StackPanel><TextBlock Text="Archivos revisados" Opacity="0.65" /><TextBlock x:Name="DocumentsCountText" Text="0" FontSize="22" FontWeight="SemiBold" /></StackPanel>
                 </Border>
                 <Border Grid.Column="1" Padding="12" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                    <StackPanel><TextBlock Text="Páginas" Opacity="0.65" /><TextBlock x:Name="PagesCountText" Text="0" FontSize="22" FontWeight="SemiBold" /></StackPanel>
+                    <StackPanel><TextBlock Text="Páginas revisadas" Opacity="0.65" /><TextBlock x:Name="PagesCountText" Text="0" FontSize="22" FontWeight="SemiBold" /></StackPanel>
                 </Border>
                 <Border Grid.Column="2" Padding="12" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <StackPanel><TextBlock Text="OCR aplicado" Opacity="0.65" /><TextBlock x:Name="OcrCountText" Text="0" FontSize="22" FontWeight="SemiBold" /></StackPanel>
