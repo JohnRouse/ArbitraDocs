@@ -73,6 +73,55 @@ public sealed class EngineService
         }
     }
 
+    public async Task<ExpedientAnalysisResult> AnalyzeExpedientAsync(
+        string source,
+        string outputDirectory,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(source) || (!File.Exists(source) && !Directory.Exists(source)))
+        {
+            throw new ArgumentException("Selecciona una carpeta, ZIP, RAR o PDF válido.", nameof(source));
+        }
+
+        if (string.IsNullOrWhiteSpace(outputDirectory))
+        {
+            throw new ArgumentException("Selecciona una carpeta donde guardar los resultados.", nameof(outputDirectory));
+        }
+
+        Directory.CreateDirectory(outputDirectory);
+        var enginePath = FindEngine();
+        var tempJson = Path.Combine(Path.GetTempPath(), $"ArbitraDocs_analysis_{Guid.NewGuid():N}.json");
+
+        try
+        {
+            await RunEngineAsync(
+                enginePath,
+                new[] { "analyze-expedient", source, outputDirectory, tempJson },
+                cancellationToken);
+
+            var json = await File.ReadAllTextAsync(tempJson, cancellationToken);
+            var result = JsonSerializer.Deserialize<ExpedientAnalysisResult>(
+                json,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return result ?? throw new InvalidOperationException("El motor no devolvió un análisis válido.");
+        }
+        finally
+        {
+            try
+            {
+                if (File.Exists(tempJson))
+                {
+                    File.Delete(tempJson);
+                }
+            }
+            catch
+            {
+                // El resultado ya quedó guardado en la carpeta elegida.
+            }
+        }
+    }
+
     public async Task ProcessAsync(
         IReadOnlyList<string> inputSources,
         string outputPdf,
