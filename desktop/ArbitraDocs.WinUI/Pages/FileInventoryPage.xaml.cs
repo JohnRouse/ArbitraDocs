@@ -48,15 +48,29 @@ public sealed partial class FileInventoryPage : Page
             SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
             ViewMode = PickerViewMode.List,
         };
-        picker.FileTypeFilter.Add(".zip");
-        picker.FileTypeFilter.Add(".rar");
+
+        // En algunas versiones de Windows el filtro exclusivo .zip/.rar del
+        // selector WinRT no muestra correctamente los archivos. Mostramos todos
+        // y validamos la extensión después de la selección para que funcione de
+        // forma consistente en Windows 10 y Windows 11.
+        picker.FileTypeFilter.Add("*");
         InitializePicker(picker);
 
         var file = await picker.PickSingleFileAsync();
-        if (file is not null)
+        if (file is null)
         {
-            await AnalyzeAsync(file.Path);
+            return;
         }
+
+        var extension = System.IO.Path.GetExtension(file.Path);
+        if (!string.Equals(extension, ".zip", StringComparison.OrdinalIgnoreCase) &&
+            !string.Equals(extension, ".rar", StringComparison.OrdinalIgnoreCase))
+        {
+            ShowStatus("Selecciona un archivo ZIP o RAR.", InfoBarSeverity.Warning);
+            return;
+        }
+
+        await AnalyzeAsync(file.Path);
     }
 
     private void DropZone_DragOver(object sender, DragEventArgs e)
@@ -85,12 +99,15 @@ public sealed partial class FileInventoryPage : Page
                 return;
             }
 
-            if (item is StorageFile file &&
-                (string.Equals(file.FileType, ".zip", StringComparison.OrdinalIgnoreCase) ||
-                 string.Equals(file.FileType, ".rar", StringComparison.OrdinalIgnoreCase)))
+            if (item is StorageFile file)
             {
-                await AnalyzeAsync(file.Path);
-                return;
+                var extension = System.IO.Path.GetExtension(file.Path);
+                if (string.Equals(extension, ".zip", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(extension, ".rar", StringComparison.OrdinalIgnoreCase))
+                {
+                    await AnalyzeAsync(file.Path);
+                    return;
+                }
             }
         }
 
