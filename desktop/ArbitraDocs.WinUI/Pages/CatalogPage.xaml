@@ -1,0 +1,17 @@
+<Page
+    x:Class="ArbitraDocs.WinUI.Pages.CatalogPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Padding="32">
+        <StackPanel Spacing="12">
+            <TextBlock x:Name="TitleText" Style="{ThemeResource TitleTextBlockStyle}" />
+            <TextBlock x:Name="DescriptionText" TextWrapping="Wrap" Opacity="0.76" MaxWidth="720" HorizontalAlignment="Left" />
+            <InfoBar
+                IsOpen="True"
+                IsClosable="False"
+                Severity="Informational"
+                Title="En desarrollo"
+                Message="Estas herramientas se incorporarán progresivamente al mismo ArbitraDocs.exe." />
+        </StackPanel>
+    </Grid>
+</Page>
