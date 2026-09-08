@@ -12,6 +12,7 @@ namespace ArbitraDocs.WinUI.Pages;
 
 public sealed partial class ExpedientAnalysisPage : Page
 {
+    public ObservableCollection<AnnexDetection> Annexes { get; } = new();
     public ObservableCollection<ContractDetection> Contracts { get; } = new();
     public ObservableCollection<PaymentDetection> Payments { get; } = new();
 
@@ -131,12 +132,13 @@ public sealed partial class ExpedientAnalysisPage : Page
 
         if (string.IsNullOrWhiteSpace(_outputDirectory))
         {
-            ShowStatus("Selecciona una carpeta donde guardar los contratos, cláusulas, comprobantes y resumen.", InfoBarSeverity.Warning);
+            ShowStatus("Selecciona una carpeta donde guardar los anexos, contratos, cláusulas y comprobantes.", InfoBarSeverity.Warning);
             return;
         }
 
         SetBusy(true);
         StatusBar.IsOpen = false;
+        Annexes.Clear();
         Contracts.Clear();
         Payments.Clear();
         ResetCounters();
@@ -144,6 +146,10 @@ public sealed partial class ExpedientAnalysisPage : Page
         try
         {
             var result = await _engine.AnalyzeExpedientAsync(_source, _outputDirectory);
+            foreach (var annex in result.Annexes)
+            {
+                Annexes.Add(annex);
+            }
             foreach (var contract in result.Contracts)
             {
                 Contracts.Add(contract);
@@ -156,22 +162,33 @@ public sealed partial class ExpedientAnalysisPage : Page
             DocumentsCountText.Text = result.DocumentsAnalyzed.ToString("N0");
             PagesCountText.Text = result.PagesAnalyzed.ToString("N0");
             OcrCountText.Text = result.OcrPages.ToString("N0");
+            AnnexDeclaredCountText.Text = result.Annexes.Count.ToString("N0");
+            AnnexLocatedCountText.Text = result.Annexes.Count(item => item.Status == "Localizado").ToString("N0");
             ContractsCountText.Text = result.Contracts.Count.ToString("N0");
             PaymentsCountText.Text = result.Payments.Count.ToString("N0");
+            AnnexIndexSourceText.Text = string.IsNullOrWhiteSpace(result.AnnexIndexSource)
+                ? "No se encontró una relación de anexos en el escrito."
+                : $"Índice tomado de: {result.AnnexIndexSource}";
+
             _outputDirectory = result.OutputDirectory;
             OutputFolderText.Text = result.OutputDirectory;
             OpenResultsButton.IsEnabled = Directory.Exists(result.OutputDirectory);
 
+            var located = result.Annexes.Count(item => item.Status == "Localizado");
+            var summary = result.Annexes.Count > 0
+                ? $"Índice: {located} de {result.Annexes.Count} anexos localizados. "
+                : string.Empty;
+
             if (result.Warnings.Count > 0)
             {
                 ShowStatus(
-                    $"Análisis terminado con {result.Warnings.Count} advertencia(s). {result.Warnings[0]}",
+                    $"{summary}Análisis terminado con {result.Warnings.Count} advertencia(s). {result.Warnings[0]}",
                     InfoBarSeverity.Warning);
             }
             else
             {
                 ShowStatus(
-                    $"Análisis terminado: {result.Contracts.Count} contrato(s) y {result.Payments.Count} comprobante(s) detectados.",
+                    $"{summary}{result.Contracts.Count} contrato(s) y {result.Payments.Count} comprobante(s) detectados.",
                     InfoBarSeverity.Success);
             }
         }
@@ -214,9 +231,11 @@ public sealed partial class ExpedientAnalysisPage : Page
     {
         _source = path;
         SourceText.Text = path;
+        Annexes.Clear();
         Contracts.Clear();
         Payments.Clear();
         ResetCounters();
+        AnnexIndexSourceText.Text = "El índice se construirá a partir de la sección de anexos del escrito.";
         OpenResultsButton.IsEnabled = false;
         StatusBar.IsOpen = false;
     }
@@ -234,6 +253,8 @@ public sealed partial class ExpedientAnalysisPage : Page
         DocumentsCountText.Text = "0";
         PagesCountText.Text = "0";
         OcrCountText.Text = "0";
+        AnnexDeclaredCountText.Text = "0";
+        AnnexLocatedCountText.Text = "0";
         ContractsCountText.Text = "0";
         PaymentsCountText.Text = "0";
     }
