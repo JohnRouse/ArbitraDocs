@@ -78,6 +78,7 @@ def _contracts_from_declared_annexes(
     annexes: list[AnnexDetection],
     output_dir: Path,
 ) -> list[base.ContractDetection]:
+    contracts_dir = output_dir / "01_CONTRATOS"
     clauses_dir = output_dir / "02_CLAUSULAS"
     contracts: list[base.ContractDetection] = []
 
@@ -87,18 +88,22 @@ def _contracts_from_declared_annexes(
         if not re.search(r"\bcontrat(?:o|os)\b", annex.description, re.IGNORECASE):
             continue
 
-        pdf_path = Path(annex.output_pdf)
-        texts = _read_pdf_texts(pdf_path)
+        annex_pdf = Path(annex.output_pdf)
+        texts = _read_pdf_texts(annex_pdf)
         if not texts:
             continue
 
         title = base._contract_title(texts[0], annex.description)
         issue_date = base._extract_contract_date(texts, 0, len(texts) - 1)
         clause_pages = base._clause_pages(texts, 0, len(texts) - 1)
+
+        contract_file = contracts_dir / f"Contrato_Anexo_{annex.number.replace('.', '_')}_{base._safe_name(title, 'Contrato')}.pdf"
+        shutil.copy2(annex_pdf, contract_file)
+
         clause_file: Path | None = None
         if clause_pages:
             clause_file = clauses_dir / f"Clausula_Anexo_{annex.number.replace('.', '_')}.pdf"
-            base._extract_pdf_pages(pdf_path, clause_pages, clause_file)
+            base._extract_pdf_pages(contract_file, clause_pages, clause_file)
 
         confidence = 0.90
         if issue_date:
@@ -115,7 +120,7 @@ def _contracts_from_declared_annexes(
                 end_page=annex.page_count,
                 arbitration_clause_pages=clause_pages,
                 confidence=min(confidence, 0.99),
-                output_pdf=annex.output_pdf,
+                output_pdf=str(contract_file.resolve()),
                 clause_pdf=str(clause_file.resolve()) if clause_file else None,
             )
         )
@@ -123,7 +128,11 @@ def _contracts_from_declared_annexes(
     return contracts
 
 
-def _payments_from_declared_annexes(annexes: list[AnnexDetection]) -> list[base.PaymentDetection]:
+def _payments_from_declared_annexes(
+    annexes: list[AnnexDetection],
+    output_dir: Path,
+) -> list[base.PaymentDetection]:
+    payments_dir = output_dir / "03_COMPROBANTES"
     payments: list[base.PaymentDetection] = []
 
     for annex in annexes:
@@ -136,7 +145,8 @@ def _payments_from_declared_annexes(annexes: list[AnnexDetection]) -> list[base.
         ):
             continue
 
-        texts = _read_pdf_texts(Path(annex.output_pdf))
+        annex_pdf = Path(annex.output_pdf)
+        texts = _read_pdf_texts(annex_pdf)
         if not texts:
             continue
 
@@ -158,6 +168,9 @@ def _payments_from_declared_annexes(annexes: list[AnnexDetection]) -> list[base.
         date = base._extract_date([text])
         confidence = 0.86 + (0.05 if amount else 0) + (0.04 if operation else 0) + (0.03 if date else 0)
 
+        payment_file = payments_dir / f"Comprobante_Anexo_{annex.number.replace('.', '_')}.pdf"
+        shutil.copy2(annex_pdf, payment_file)
+
         payments.append(
             base.PaymentDetection(
                 description=annex.description,
@@ -167,7 +180,7 @@ def _payments_from_declared_annexes(annexes: list[AnnexDetection]) -> list[base.
                 source_path=_source_text(annex),
                 page=best_index + 1,
                 confidence=min(confidence, 0.99),
-                output_pdf=annex.output_pdf,
+                output_pdf=str(payment_file.resolve()),
             )
         )
 
@@ -214,7 +227,7 @@ def analyze_expedient(source: str | Path, output_directory: str | Path) -> Exped
         _clear_folder(output_dir / "02_CLAUSULAS")
         _clear_folder(output_dir / "03_COMPROBANTES")
         contracts = _contracts_from_declared_annexes(annex_result.annexes, output_dir)
-        payments = _payments_from_declared_annexes(annex_result.annexes)
+        payments = _payments_from_declared_annexes(annex_result.annexes, output_dir)
 
     result = ExpedientAnalysisResult(
         source=base_result.source,
