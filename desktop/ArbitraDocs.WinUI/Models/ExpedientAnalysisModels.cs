@@ -19,6 +19,12 @@ public sealed class ExpedientAnalysisResult
     [JsonPropertyName("ocr_pages")]
     public int OcrPages { get; set; }
 
+    [JsonPropertyName("annexes")]
+    public List<AnnexDetection> Annexes { get; set; } = new();
+
+    [JsonPropertyName("annex_index_source")]
+    public string? AnnexIndexSource { get; set; }
+
     [JsonPropertyName("contracts")]
     public List<ContractDetection> Contracts { get; set; } = new();
 
@@ -27,6 +33,74 @@ public sealed class ExpedientAnalysisResult
 
     [JsonPropertyName("warnings")]
     public List<string> Warnings { get; set; } = new();
+}
+
+public sealed class AnnexDetection
+{
+    [JsonPropertyName("number")]
+    public string Number { get; set; } = string.Empty;
+
+    [JsonPropertyName("description")]
+    public string Description { get; set; } = string.Empty;
+
+    [JsonPropertyName("status")]
+    public string Status { get; set; } = string.Empty;
+
+    [JsonPropertyName("source_ranges")]
+    public List<AnnexSourceRange> SourceRanges { get; set; } = new();
+
+    [JsonPropertyName("page_count")]
+    public int PageCount { get; set; }
+
+    [JsonPropertyName("confidence")]
+    public double Confidence { get; set; }
+
+    [JsonPropertyName("output_pdf")]
+    public string? OutputPdf { get; set; }
+
+    [JsonIgnore]
+    public string Title => $"Anexo {Number}";
+
+    [JsonIgnore]
+    public string LocationText
+    {
+        get
+        {
+            if (SourceRanges.Count == 0)
+            {
+                return "No localizado";
+            }
+
+            if (SourceRanges.Count == 1)
+            {
+                var item = SourceRanges[0];
+                var range = item.StartPage == item.EndPage
+                    ? $"pág. {item.StartPage}"
+                    : $"págs. {item.StartPage}-{item.EndPage}";
+                return $"{item.SourcePath} · {range}";
+            }
+
+            return $"{SourceRanges.Count} archivos o tramos · {PageCount} páginas";
+        }
+    }
+
+    [JsonIgnore]
+    public string ConfidenceText => Confidence <= 0 ? string.Empty : $"{Confidence:P0}";
+
+    [JsonIgnore]
+    public bool CanOpen => !string.IsNullOrWhiteSpace(OutputPdf);
+}
+
+public sealed class AnnexSourceRange
+{
+    [JsonPropertyName("source_path")]
+    public string SourcePath { get; set; } = string.Empty;
+
+    [JsonPropertyName("start_page")]
+    public int StartPage { get; set; }
+
+    [JsonPropertyName("end_page")]
+    public int EndPage { get; set; }
 }
 
 public sealed class ContractDetection
