@@ -90,6 +90,17 @@ def normalize_pdf_to_a4(
                 )
                 continue
 
+            # show_pdf_page() no aplica automáticamente /Rotate de la página
+            # origen. Eso provocaba que páginas visualmente verticales con
+            # /Rotate=90/270 se pegaran de costado y se cortaran al pasarlas
+            # a una hoja A4 vertical. Quitamos la rotación del DOCUMENTO EN
+            # MEMORIA antes de copiar su apariencia visual a la hoja nueva.
+            # remove_rotation() conserva la apariencia que ve el usuario,
+            # transforma el contenido y deja la página con rotación 0.
+            # El PDF original del disco permanece inalterado.
+            if page.rotation:
+                page.remove_rotation()
+
             target_page = output_doc.new_page(
                 width=A4_RECT.width,
                 height=A4_RECT.height,
