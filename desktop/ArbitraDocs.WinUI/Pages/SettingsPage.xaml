@@ -1,0 +1,15 @@
+<Page
+    x:Class="ArbitraDocs.WinUI.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer>
+        <StackPanel Padding="32" Spacing="16" MaxWidth="760" HorizontalAlignment="Left">
+            <TextBlock Text="Configuración" Style="{ThemeResource TitleTextBlockStyle}" />
+            <TextBlock Text="ArbitraDocs Beta WinUI 3" FontSize="18" FontWeight="SemiBold" />
+            <TextBlock
+                Text="La aplicación procesa los documentos localmente. Las preferencias persistentes y las opciones globales se incorporarán en siguientes betas."
+                TextWrapping="Wrap"
+                Opacity="0.75" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

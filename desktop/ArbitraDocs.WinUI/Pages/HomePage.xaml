@@ -1,0 +1,81 @@
+<Page
+    x:Class="ArbitraDocs.WinUI.Pages.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer>
+        <StackPanel Padding="32" Spacing="18">
+            <TextBlock
+                Text="ArbitraDocs"
+                Style="{ThemeResource TitleTextBlockStyle}" />
+
+            <TextBlock
+                Text="Suite gratuita de herramientas documentales"
+                Style="{ThemeResource SubtitleTextBlockStyle}"
+                Opacity="0.78" />
+
+            <InfoBar
+                IsOpen="True"
+                IsClosable="False"
+                Severity="Informational"
+                Title="Beta WinUI 3"
+                Message="Preparar PDFs, Mapear archivos y Analizar expediente ya están conectadas al motor local. Las siguientes herramientas se irán habilitando progresivamente." />
+
+            <TextBlock
+                Margin="0,10,0,0"
+                Text="Herramientas"
+                Style="{ThemeResource TitleTextBlockStyle}"
+                FontSize="22" />
+
+            <GridView
+                x:Name="ToolGrid"
+                ItemsSource="{x:Bind Tools}"
+                IsItemClickEnabled="True"
+                SelectionMode="None"
+                ItemClick="ToolGrid_ItemClick">
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid
+                            ItemWidth="245"
+                            ItemHeight="132"
+                            Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+                <GridView.ItemTemplate>
+                    <DataTemplate>
+                        <Border
+                            Margin="5"
+                            Padding="16"
+                            CornerRadius="10"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock
+                                    Text="{Binding Name}"
+                                    FontSize="16"
+                                    FontWeight="SemiBold" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Margin="0,8,0,0"
+                                    Text="{Binding Description}"
+                                    TextWrapping="Wrap"
+                                    Opacity="0.72" />
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Text="{Binding Status}"
+                                    FontSize="12"
+                                    Opacity="0.65" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

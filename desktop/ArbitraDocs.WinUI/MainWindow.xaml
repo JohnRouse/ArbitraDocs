@@ -1,0 +1,63 @@
+<Window
+    x:Class="ArbitraDocs.WinUI.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <NavigationView
+        x:Name="RootNavigation"
+        PaneTitle="ArbitraDocs"
+        IsBackButtonVisible="Collapsed"
+        IsSettingsVisible="True"
+        SelectionChanged="RootNavigation_SelectionChanged">
+
+        <NavigationView.MenuItems>
+            <NavigationViewItem Content="Inicio" Tag="home">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE80F;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+
+            <NavigationViewItemHeader Content="Herramientas disponibles" />
+
+            <NavigationViewItem Content="Preparar PDFs" Tag="mergefolio">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE8C8;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+
+            <NavigationViewItem Content="Mapear archivos" Tag="inventory">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE8B7;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+
+            <NavigationViewItem Content="Analizar expediente" Tag="analysis">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE9D9;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+
+            <NavigationViewItemHeader Content="Suite documental" />
+
+            <NavigationViewItem Content="Herramientas PDF" Tag="pdf">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE8A5;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+
+            <NavigationViewItem Content="Conversiones" Tag="convert">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE8AB;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+
+            <NavigationViewItem Content="Herramientas especiales" Tag="special">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE734;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+        </NavigationView.MenuItems>
+
+        <Frame x:Name="ContentFrame" />
+    </NavigationView>
+</Window>

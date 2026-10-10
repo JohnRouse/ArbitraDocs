@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "arbitradocs"
+version = "0.1.0.dev1"
+description = "Suite gratuita de herramientas documentales"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "pymupdf>=1.26.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pyinstaller>=6.10"]
+
+[project.scripts]
+arbitradocs = "arbitrapdf.cli:main"
+
+[project.gui-scripts]
+arbitradocs-gui = "arbitrapdf.gui:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
