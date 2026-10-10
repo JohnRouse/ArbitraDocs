@@ -234,6 +234,14 @@ def foliate_pdf(
         numbers = _number_sequence(doc.page_count, options.start, options.direction)
         font_name, font_file, measure_font = _font_resources(options)
         for page, number in zip(doc, numbers):
+            # PyMuPDF recibe coordenadas de inserción en el espacio no rotado.
+            # Algunos expedientes traen páginas visualmente verticales con /Rotate
+            # 90/180/270. Si se folian así, el visor rota también el texto nuevo y
+            # el folio termina de costado. remove_rotation() conserva la apariencia
+            # visual de la página, transforma su contenido y deja /Rotate en 0.
+            if page.rotation:
+                page.remove_rotation()
+
             lines = _folio_lines(number, options.mode)
             rect, align = _layout(page, options, len(lines))
             _insert_fitted(
