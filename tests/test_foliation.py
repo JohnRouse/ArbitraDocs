@@ -36,6 +36,7 @@ def test_foliation_normalizes_page_rotation(tmp_path: Path) -> None:
         text = page.get_text("text")
         assert "CONTENIDO ORIGINAL" in text
         assert "104" in text
-        assert "CIENTO CUATRO" in text.replace("\\xa0", " ")
+        normalized_text = " ".join(text.split())
+        assert "CIENTO CUATRO" in normalized_text
     finally:
         result.close()
