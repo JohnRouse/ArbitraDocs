@@ -95,3 +95,40 @@ def test_letter_page_becomes_a4(tmp_path: Path):
     assert abs(out[0].rect.width - A4_RECT.width) < 0.1
     assert abs(out[0].rect.height - A4_RECT.height) < 0.1
     out.close()
+
+
+def test_rotated_a4_pages_keep_the_same_visual_orientation(tmp_path: Path):
+    """La normalización no debe girar ni cortar páginas /Rotate 90/180/270.
+
+    Este caso reproduce las cartas notariales del expediente 8033.zip: su
+    tamaño visible es A4 vertical, pero su página PDF interna es horizontal.
+    """
+    for angle in (90, 180, 270):
+        source = tmp_path / f"rotated_{angle}.pdf"
+        output = tmp_path / f"normalized_{angle}.pdf"
+        document = fitz.open()
+        width, height = (842, 595) if angle in (90, 270) else (595, 842)
+        page = document.new_page(width=width, height=height)
+        page.draw_rect(fitz.Rect(45, 50, 220, 130), fill=(0, 0.55, 0), color=(0, 0.55, 0))
+        page.insert_text((52, 170), f"ROTACION {angle}", fontsize=15)
+        page.set_rotation(angle)
+        reference_pixels = page.get_pixmap(alpha=False).samples
+        document.save(source)
+        document.close()
+
+        normalize_pdf_to_a4(
+            source,
+            output,
+            NormalizationOptions(margin_mm=0, preserve_a4=False),
+        )
+
+        normalized = fitz.open(output)
+        try:
+            result = normalized[0]
+            assert result.rotation == 0
+            assert result.rect.width < result.rect.height
+            # Cuando no se piden márgenes, la visualización debe ser idéntica
+            # píxel a píxel; así detectamos páginas giradas o incompletas.
+            assert result.get_pixmap(alpha=False).samples == reference_pixels
+        finally:
+            normalized.close()
