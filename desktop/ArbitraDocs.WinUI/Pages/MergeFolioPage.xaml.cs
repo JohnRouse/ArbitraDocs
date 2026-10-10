@@ -380,7 +380,25 @@ public sealed partial class MergeFolioPage : Page
         PreviewFolioText.FontFamily = new FontFamily(family);
         PreviewFolioText.FontWeight = BoldButton?.IsChecked == true ? FontWeights.Bold : FontWeights.Normal;
         PreviewFolioText.FontStyle = ItalicButton?.IsChecked == true ? FontStyle.Italic : FontStyle.Normal;
-        PreviewFolioText.FontSize = Math.Clamp(SafeValue(FontSizeBox, 8) * 1.05, 8, 28);
+
+        // La hoja de vista previa mide 252 x 356 unidades y representa A4
+        // (210 x 297 mm). Usamos la misma escala física para fuente y márgenes
+        // que usa el motor PDF. Antes se forzaba un mínimo visual de 8 px, por
+        // eso un folio de 5.5 pt se veía mucho más grande que en el resultado.
+        const double previewWidth = 252.0;
+        const double previewHeight = 356.0;
+        const double a4WidthMm = 210.0;
+        const double a4HeightMm = 297.0;
+        const double mmPerPoint = 25.4 / 72.0;
+        var unitsPerMmX = previewWidth / a4WidthMm;
+        var unitsPerMmY = previewHeight / a4HeightMm;
+        var unitsPerPoint = unitsPerMmX * mmPerPoint;
+
+        var requestedFontPt = Math.Clamp(SafeValue(FontSizeBox, 8), 5.5, 30);
+        var previewFontSize = requestedFontPt * unitsPerPoint;
+        PreviewFolioText.FontSize = previewFontSize;
+        PreviewFolioText.LineHeight = Math.Max(1.0, requestedFontPt * 1.15 * unitsPerPoint);
+        PreviewFolioText.LineStackingStrategy = LineStackingStrategy.BlockLineHeight;
         PreviewFolioText.Opacity = FoliateToggle?.IsOn == true ? 1.0 : 0.22;
 
         var position = SelectedTag(PositionCombo, "top-right");
@@ -398,8 +416,16 @@ public sealed partial class MergeFolioPage : Page
                 ? TextAlignment.Center
                 : TextAlignment.Right;
 
-        var marginX = Math.Clamp(SafeValue(FolioMarginXBox, 10) * 1.2, 0, 72);
-        var marginY = Math.Clamp(SafeValue(FolioMarginYBox, 6) * 1.2, 0, 72);
+        var marginX = Math.Clamp(SafeValue(FolioMarginXBox, 10) * unitsPerMmX, 0, previewWidth * 0.45);
+        var marginY = Math.Clamp(SafeValue(FolioMarginYBox, 6) * unitsPerMmY, 0, previewHeight * 0.45);
+        var lineCount = mode == "numero+letras" ? 2 : 1;
+        var blockHeightPt = lineCount * (requestedFontPt * 1.35) + 1.0;
+        PreviewFolioText.Height = Math.Max(2.0, blockHeightPt * unitsPerPoint);
+        PreviewFolioText.MaxWidth = previewWidth;
+        PreviewFolioText.Width = position.EndsWith("center", StringComparison.Ordinal)
+            ? Math.Max(12.0, previewWidth - (2 * marginX))
+            : Math.Max(12.0, (previewWidth * 0.70) - marginX);
+
         PreviewFolioText.Margin = position switch
         {
             "top-left" => new Thickness(marginX, marginY, 0, 0),
@@ -425,7 +451,7 @@ public sealed partial class MergeFolioPage : Page
 
         if (!CertifyToggle.IsOn)
         {
-            PreviewHint.Text = "La vista previa representa la posición aproximada del folio.";
+            PreviewHint.Text = "La vista previa usa la misma escala proporcional de tamaño y márgenes que el PDF final.";
             return;
         }
 
