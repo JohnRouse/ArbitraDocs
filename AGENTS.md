@@ -12,3 +12,7 @@
 ## Decisiones de alcance — NO construir en la web
 
 No volver a agregar al catálogo, roadmap ni interfaz: Analizar expediente; Detectar anexos desde el escrito; Preparar escrito + anexos automáticamente; Ordenar anexos por nomenclatura; Inventario documental independiente; Ubicación de contratos, cláusulas y comprobantes. Siguen en alcance el mapeo visual de archivos/carpetas, ZIP/RAR para unión, foliación, certificación y normalizar nombres. No borrar código legado WinUI por esta instrucción.
+
+## Flujo de desarrollo visual obligatorio
+
+Todos los cambios de diseño en ArbitraDocs Web deben pasar por un ciclo local Codex CLI + Playwright: levantar web en localhost, probar en escritorio/tableta/móvil, generar capturas reales, **inspeccionarlas visualmente**, corregir defectos y repetir la prueba. También revisar consola, flujos de carga/proceso/descarga y backend. No afirmar que se inspeccionaron capturas si el entorno no permite verlas. Usar únicamente PDFs de prueba sintéticos. Mantener diseño original, no copiar sitios competidores. Leer `docs/VISUAL_QA_PLAYWRIGHT.md` antes de modificar frontend. Los resultados de Playwright y `.local-data` no se suben al repositorio.
