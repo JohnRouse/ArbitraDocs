@@ -27,3 +27,9 @@ Navegar a http://127.0.0.1:8000. Ejecutar pruebas con `python -m pytest tests -q
 Los datos residen por defecto en `web/.local-data/`. No añadir expedientes reales al repositorio.
 
 Diseño y requisitos de producción: [docs/WEB_PLATFORM_V1.md](../docs/WEB_PLATFORM_V1.md).
+
+## Pruebas visuales con Codex CLI
+
+El flujo aprobado para UI es Visual Studio Code + Codex CLI + Playwright, con servidor local. Después de cada cambio visual se prueban tres tamaños (1440×900, 768×1024 y 390×844), se obtienen **y revisan** capturas de pantalla y se verifican las acciones principales. Los detalles y criterios de calidad están en [docs/VISUAL_QA_PLAYWRIGHT.md](../docs/VISUAL_QA_PLAYWRIGHT.md).
+
+**Nota:** la integración Playwright del prototipo aún debe configurarse al incorporar el código web del paquete inicial al repositorio; estas instrucciones no significan que las pruebas E2E ya existan o se hayan ejecutado.
