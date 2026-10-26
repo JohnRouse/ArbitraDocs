@@ -24,3 +24,17 @@ test-data/private/
 *.zip
 *.rar
 output/
+
+# ArbitraDocs Web - private local state and generated test artifacts
+web/.local-data/
+web/node_modules/
+web/.next/
+web/.nuxt/
+web/test-results/
+web/playwright-report/
+web/blob-report/
+web/.playwright/
+web/coverage/
+web/.env
+web/.env.*
+!web/.env.example
