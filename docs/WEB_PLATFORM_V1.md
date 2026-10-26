@@ -4,7 +4,7 @@ Estado: arquitectura propuesta y primera base funcional local distribuida para V
 
 ## Objetivo
 
-ArbitraDocs evoluciona a una suite web de herramientas PDF y expedientes con biblioteca privada, procesamiento en servidor y resultados descargables. La aplicación WinUI 3 se conserva como alternativa local y como fuente de algoritmos validados.
+ArbitraDocs evoluciona a una suite web de herramientas PDF y documentales con biblioteca privada, procesamiento en servidor y resultados descargables. La experiencia busca la sencillez de suites como Smallpdf, iLovePDF y PDF Candy, con identidad visual original. La aplicación WinUI 3 se conserva como alternativa local y como fuente de algoritmos validados.
 
 ## Recorrido previsto
 
@@ -34,14 +34,27 @@ El motor actual usa PyMuPDF, distribuido bajo AGPL o licencia comercial. Revisar
 
 1. PDF general: unir, dividir, extraer, reordenar, girar, comprimir, OCR, aplanar, recortar, marca de agua, proteger/desbloquear y firmar.
 2. Conversiones: PDF ↔ JPG/PNG/WebP; Word/Excel/PPT ↔ PDF y exportaciones a Office.
-3. Expedientes: A4 y márgenes, foliar (número/letras, ascendente/descendente), certificación al reverso o sello por página, ZIP/RAR/carpeta, escrito+anexos, inventario, normalizar nombres, detección de contrato/cláusula/pago.
+3. Herramientas documentales especiales: normalizar A4 y márgenes, foliar (número/letras, ascendente/descendente), certificar al reverso o con sello por página, unir documentos de ZIP/RAR/carpetas, mapear estructuras de carpetas/archivos y normalizar nombres/rutas.
+
+### Exclusiones expresas del alcance web
+
+No desarrollar ni mostrar en el catálogo web las siguientes funciones, retiradas por decisión del propietario del proyecto:
+
+- Analizar expediente.
+- Detectar anexos desde el escrito.
+- Preparar escrito + anexos automáticamente.
+- Ordenar anexos por nomenclatura.
+- Inventario documental (como herramienta independiente de extracción de informes/inventarios).
+- Ubicación de contratos, cláusulas y comprobantes.
+
+**Distinción:** se mantiene la posibilidad de **mapear archivos o carpetas** para explorar estructuras y la carga de ZIP/RAR para procesar documentos, pero no se implementará un módulo separado de «Inventario documental» ni un analizador automático de anexos o contratos. No eliminar funcionalidades históricas del código WinUI ni del motor sin una decisión posterior específica.
 
 ## Fases
 
 - Fase 1: prototipo local visual con biblioteca persistente, subida PDF, unión, extracción y rotación; pruebas.
 - Fase 2: cuentas, almacenamiento privado S3, PostgreSQL, carga grande, trabajos asíncronos, permisos, cuotas, retención y borrado.
 - Fase 3: suite PDF general y conversiones.
-- Fase 4: herramientas avanzadas de arbitraje aprovechando el motor WinUI.
+- Fase 4: herramientas documentales especiales permitidas: foliación, certificación, mapeo de archivos y normalización de nombres, reutilizando el motor WinUI.
 - Fase 5: auditoría, privacidad, licencias, costos y despliegue público controlado.
 
 ## Estado actual
