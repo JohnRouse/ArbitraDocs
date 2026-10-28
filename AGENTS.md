@@ -16,3 +16,7 @@ No volver a agregar al catálogo, roadmap ni interfaz: Analizar expediente; Dete
 ## Flujo de desarrollo visual obligatorio
 
 Todos los cambios de diseño en ArbitraDocs Web deben pasar por un ciclo local Codex CLI + Playwright: levantar web en localhost, probar en escritorio/tableta/móvil, generar capturas reales, **inspeccionarlas visualmente**, corregir defectos y repetir la prueba. También revisar consola, flujos de carga/proceso/descarga y backend. No afirmar que se inspeccionaron capturas si el entorno no permite verlas. Usar únicamente PDFs de prueba sintéticos. Mantener diseño original, no copiar sitios competidores. Leer `docs/VISUAL_QA_PLAYWRIGHT.md` antes de modificar frontend. Los resultados de Playwright y `.local-data` no se suben al repositorio.
+
+## Rediseño visual actual (octubre de 2026)
+
+Antes de cambios visuales de la web, leer `docs/WEB_VISUAL_REDESIGN_V2.md` y `docs/VISUAL_QA_PLAYWRIGHT.md`. Aplicar experiencia minimalista premium, microinteracciones útiles y estados reales de subida/procesamiento/resultado. No añadir HyperFrames como motor runtime (sirve para composición de video, no interacción de web). **El código web funcional más reciente está localmente y puede no existir todavía en la rama remota; inspeccionar cambios locales y respaldarlos antes de editar.** No hacer push ni merge sin aprobación.
