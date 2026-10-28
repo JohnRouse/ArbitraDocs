@@ -20,3 +20,7 @@ Todos los cambios de diseño en ArbitraDocs Web deben pasar por un ciclo local C
 ## Rediseño visual actual (octubre de 2026)
 
 Antes de cambios visuales de la web, leer `docs/WEB_VISUAL_REDESIGN_V2.md` y `docs/VISUAL_QA_PLAYWRIGHT.md`. Aplicar experiencia minimalista premium, microinteracciones útiles y estados reales de subida/procesamiento/resultado. No añadir HyperFrames como motor runtime (sirve para composición de video, no interacción de web). **El código web funcional más reciente está localmente y puede no existir todavía en la rama remota; inspeccionar cambios locales y respaldarlos antes de editar.** No hacer push ni merge sin aprobación.
+
+## Intro de marca y portales por rol
+
+Aplicar las decisiones de `docs/WEB_INTRO_AUTH_ADMIN_V1.md`: posible animación inicial con HyperFrames (sin bloquear la web, opción reducida/estática), tres áreas públicas/de usuario/admin; los prototipos de cuenta/panel no son autenticación real. Antes de producción exigir roles autorizados server-side, biblioteca por propietario, MFA para admin, seguridad y auditoría. Preservar y respetar cambios locales no publicados.
