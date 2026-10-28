@@ -24,3 +24,7 @@ Antes de cambios visuales de la web, leer `docs/WEB_VISUAL_REDESIGN_V2.md` y `do
 ## Intro de marca y portales por rol
 
 Aplicar las decisiones de `docs/WEB_INTRO_AUTH_ADMIN_V1.md`: posible animación inicial con HyperFrames (sin bloquear la web, opción reducida/estática), tres áreas públicas/de usuario/admin; los prototipos de cuenta/panel no son autenticación real. Antes de producción exigir roles autorizados server-side, biblioteca por propietario, MFA para admin, seguridad y auditoría. Preservar y respetar cambios locales no publicados.
+
+## Centro de actividad global y cadena de herramientas
+
+Aplicar `docs/WEB_ACTIVITY_DOCK_AND_PIPELINE_V1.md`: mientras un PDF se procesa, mantener job persistente en servidor; al navegar mostrar ActivityDock no modal en esquina inferior derecha o compactado en móvil, con estado real y acceso a resultados. Ofrecer `Usar en otra herramienta` reutilizando `file_id` del PDF resultante sin subir de nuevo. No simular porcentajes ni continuidad backend que el prototipo actual no implementa. Prototipar UI y probar con Playwright; no bloquear navegación. Respetar permisos de usuario y retención de archivos.
