@@ -60,3 +60,7 @@ No desarrollar ni mostrar en el catálogo web las siguientes funciones, retirada
 ## Estado actual
 
 La primera base de código de desarrollo fue preparada como paquete independiente para abrir con VS Code y Codex CLI. Es **exclusivamente localhost**, con biblioteca SQLite y almacenamiento local en carpeta privada, y todavía carece de usuarios, S3 y colas. No confundir con la arquitectura cloud final.
+
+## Experiencia transversal prioritaria: trabajos y reuso de resultados
+
+Nueva capacidad diferenciadora planificada: procesamiento no bloqueante mientras el usuario navega, centro de actividad compacto global, historial de tareas y opción **«Usar en otra herramienta»** sin volver a cargar el PDF. Requiere persistencia de trabajos en backend, workers, archivos identificados y autorización del propietario; un widget frontend por sí solo no basta. Ver [WEB_ACTIVITY_DOCK_AND_PIPELINE_V1.md](WEB_ACTIVITY_DOCK_AND_PIPELINE_V1.md). Hasta implementarlo, indicar claramente en prototipo qué es demostración.
