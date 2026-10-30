@@ -28,3 +28,7 @@ Aplicar las decisiones de `docs/WEB_INTRO_AUTH_ADMIN_V1.md`: posible animación 
 ## Centro de actividad global y cadena de herramientas
 
 Aplicar `docs/WEB_ACTIVITY_DOCK_AND_PIPELINE_V1.md`: mientras un PDF se procesa, mantener job persistente en servidor; al navegar mostrar ActivityDock no modal en esquina inferior derecha o compactado en móvil, con estado real y acceso a resultados. Ofrecer `Usar en otra herramienta` reutilizando `file_id` del PDF resultante sin subir de nuevo. No simular porcentajes ni continuidad backend que el prototipo actual no implementa. Prototipar UI y probar con Playwright; no bloquear navegación. Respetar permisos de usuario y retención de archivos.
+
+## Prioridad visual: intro de pantalla completa (V2)
+
+El usuario aclaró que la bienvenida de HyperFrames debe mostrarse **a pantalla completa al entrar por primera vez**, como un preloader/intro de marca, no incrustada en una tarjeta lateral del inicio. Leer primero `docs/WEB_FULLSCREEN_INTRO_V2.md`; esta decisión sustituye cualquier guía anterior que sugiera intro integrada en hero. Reutilizar los avances locales y tests de Fase B, incorporar botón Omitir desde inicio y movimiento reducido, y reemplazar póster de bienvenida del hero por contenido útil. HyperFrames sigue reservado a esta introducción de marca, no al progreso de PDF. No hacer push, merge ni alterar el motor sin aprobación.
