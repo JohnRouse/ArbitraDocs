@@ -21,7 +21,7 @@ No incluir análisis automático de expedientes, búsqueda de anexos, inventario
 - 1.4–2.1 s: aparece «ArbitraDocs» y el lema «Tus documentos, sin complicaciones».
 - 2.1–2.5 s: transición de opacidad hacia el hero y su buscador de herramientas.
 
-**Duración orientativa**, no bloquear navegación ni alterar la carga real del documento. Preferir animación integrada en el hero/página a un splash de pantalla completa que oculta contenido. Implementar «Omitir» si la pantalla completa es una decisión posterior.
+**Decisión V2 (29/10/2026):** El propietario confirmó que la animación debe ocupar **toda la pantalla como presentación inicial**, NO un cuadro del hero. Reutilizar la composición existente mediante un overlay global, con opción visible «Omitir», salida fluida y respeto a movimiento reducido. No bloquear indefinidamente ni retrasar la carga funcional de la web. Ver `docs/WEB_FULLSCREEN_INTRO_V2.md`, que prevalece sobre la anterior preferencia.
 
 HyperFrames admite crear composiciones HTML y renderizarlas a MP4/WebM; también ofrece `@hyperframes/player` para embeber composiciones. Codex debe investigar ambas alternativas, probar rendimiento y elegir la más ligera y compatible. Composición original; no usar plantillas visuales idénticas a competidores. Referencia: https://hyperframes.app/docs/5-packages/player y https://hyperframes.app/docs/3-guides/4-rendering.
 
